@@ -95,15 +95,24 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request)
     {
         $edited = Product::find($request->id_product);
-        $edited->name = $request->name;
-        $edited->category = $request->category;
-        $edited->company = $request->company;
-        $edited->amount = $request->amount;
-        $edited->price = $request->price;
+
+
+        $name = $request->name;
+        $category = $request->category;
+        $company = $request->company;
+        $amount = $request->amount;
+        $price = $request->price;
+
+        $edited->name = $name;
+        $edited->category = $category;
+        $edited->company = $company;
+        $edited->amount = $amount;
+        $edited->price = $price;
         $edited->save();
+        
         return response()->json(['200' => 'success']);
     }
 
