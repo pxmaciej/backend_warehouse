@@ -31,3 +31,17 @@ Route::group([
     Route::delete('destroy/{user_id}', [App\Http\Controllers\AuthController::class, 'destroy']);
 });
 
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'product'
+
+], function ($router) {
+
+    Route::get('index', [App\Http\Controllers\ProductController::class, 'index'])->middleware('roles:admin');
+    Route::post('store', [App\Http\Controllers\ProductController::class, 'store']);
+    Route::get('show/{id_product}', [App\Http\Controllers\ProductController::class, 'show']);
+    Route::post('update', [App\Http\Controllers\ProductController::class, 'update']);
+    Route::delete('destroy/{id_product}', [App\Http\Controllers\ProductController::class, 'destroy']);
+});
+
