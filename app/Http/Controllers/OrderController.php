@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Order;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class ProductController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $show = Product::get();
+        $show = Order::get();
         return response()->json([$show]);
     }
 
@@ -38,73 +37,65 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'category' => 'required|string',
-            'company' => 'required|string',
-            'amount' => 'required',
-            'price'=> 'required',
+            'nameBuyer' => 'required|string',
+            'dateOrder' => 'required',
+            'dateDeliver' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['error' => $validator->messages()],401);
-
         }
 
-        Product::create([
-            'name' => $request->name,
-            'category'=> $request->category,
-            'company' => $request->company,
-            'amount' => $request->amount,
-            'price' => $request->price,
+
+        Order::create([
+            'nameBuyer' => $request->nameBuyer,
+            'dateOrder'=> $request->dateOrder,
+            'dateDeliver' => $request->dateDeliver,
         ]);
         return response()->json(['200' => 'success']);
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show($id_product)
+    public function show(Order $order)
     {
-        $show = Product::where('id', 'like', '%'.$id_product.'%')->get();
-        return $show;
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function edit($id_product)
+    public function edit(Order $order)
     {
-        
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, Order $order)
     {
-        $edited = Product::find($request->id_product);
+        $edited = Order::find($request->id_order);
 
 
-        $name = $request->name;
-        $category = $request->category;
-        $company = $request->company;
-        $amount = $request->amount;
-        $price = $request->price;
+        $nameBuyer = $request->nameBuyer;
+        $dateOrder = $request->dateOrder;
+        $dateDeliver = $request->dateDeliver;
 
-        $edited->name = $name;
-        $edited->category = $category;
-        $edited->company = $company;
-        $edited->amount = $amount;
-        $edited->price = $price;
+        $edited->nameBuyer = $nameBuyer;
+        $edited->dateOrder = $dateOrder;
+        $edited->dateDeliver = $dateDeliver;
         $edited->save();
 
         return response()->json(['200' => 'success']);
@@ -113,12 +104,12 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Order $order)
     {
-        $destroy = Product::find($product);
+        $destroy = Order::find($order);
         $destroy->delete();
         return response()->json(['200' => 'success']);
     }
