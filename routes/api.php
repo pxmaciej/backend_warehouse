@@ -28,7 +28,7 @@ Route::group([
     Route::post('logout', [App\Http\Controllers\AuthController::class, 'logout']);
     Route::post('refresh', [App\Http\Controllers\AuthController::class, 'refresh']);
     Route::post('profile', [App\Http\Controllers\AuthController::class, 'userProfile']);
-    Route::delete('destroy/{user_id}', [App\Http\Controllers\AuthController::class, 'destroy']);
+    Route::delete('destroy/{id}', [App\Http\Controllers\AuthController::class, 'destroy']);
 });
 
 Route::group([
@@ -38,10 +38,40 @@ Route::group([
 
 ], function ($router) {
 
-    Route::get('index', [App\Http\Controllers\ProductController::class, 'index'])->middleware('roles:admin');
+    Route::get('index', [App\Http\Controllers\ProductController::class, 'index']);
     Route::post('store', [App\Http\Controllers\ProductController::class, 'store']);
-    Route::get('show/{id_product}', [App\Http\Controllers\ProductController::class, 'show']);
+    Route::get('show/{id}', [App\Http\Controllers\ProductController::class, 'show']);
+    Route::get('order/{id}', [App\Http\Controllers\ProductController::class, 'order']);
     Route::post('update', [App\Http\Controllers\ProductController::class, 'update']);
-    Route::delete('destroy/{id_product}', [App\Http\Controllers\ProductController::class, 'destroy']);
+    Route::delete('destroy/{id}', [App\Http\Controllers\ProductController::class, 'destroy']);
 });
 
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'order'
+
+], function ($router) {
+
+    Route::get('index', [App\Http\Controllers\OrderController::class, 'index']);
+    Route::post('store', [App\Http\Controllers\OrderController::class, 'store']);
+    Route::get('show/{id}', [App\Http\Controllers\OrderController::class, 'show']);
+    Route::get('product/{id}', [App\Http\Controllers\OrderController::class, 'product']);
+    Route::post('update', [App\Http\Controllers\OrderController::class, 'update']);
+    Route::delete('destroy/{id}', [App\Http\Controllers\OrderController::class, 'destroy']);
+});
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'orderlist'
+
+], function ($router) {
+
+    Route::get('index', [App\Http\Controllers\OrderListController::class, 'index']);
+    Route::post('store', [App\Http\Controllers\OrderListController::class, 'store']);
+    Route::get('show/{id}', [App\Http\Controllers\OrderListController::class, 'show']);
+    Route::get('order/{id}', [App\Http\Controllers\OrderListController::class, 'order']);
+    Route::post('update', [App\Http\Controllers\OrderListController::class, 'update']);
+    Route::delete('destroy/{id}', [App\Http\Controllers\OrderListController::class, 'destroy']);
+});

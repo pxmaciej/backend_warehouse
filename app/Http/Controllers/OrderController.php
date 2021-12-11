@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
+
+    public function __construct() 
+    {
+        //$this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -61,9 +67,24 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $order)
+    public function show($id)
     {
-        //
+        $show = Order::where('id', $id)->get();
+        return $show;
+    }
+
+    /**
+     * Display the specified resource in relationship.
+     *
+     * @param  \App\Models\Order  $order
+     * @return \Illuminate\Http\Response
+     */
+    public function product($id)
+    {
+        $show = Order::find($id)
+        ->products()
+        ->get();
+        return $show;
     }
 
     /**

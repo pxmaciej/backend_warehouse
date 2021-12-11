@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\OrderList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ProductController extends Controller
+class OrderListController extends Controller
 {
     public function __construct() 
     {
-        //$this->middleware('auth:api');
+       // $this->middleware('auth:api');
     }
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $show = Product::get();
+        $show = OrderList::get();
         return response()->json([$show]);
     }
 
@@ -42,9 +42,8 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'category' => 'required|string',
-            'company' => 'required|string',
+            'product_id' => 'required',
+            'order_id' => 'required',
             'amount' => 'required',
             'price'=> 'required',
         ]);
@@ -53,57 +52,71 @@ class ProductController extends Controller
 
         }
 
-        Product::create([
-            'name' => $request->name,
-            'category'=> $request->category,
-            'company' => $request->company,
+        OrderList::create([
+            'product_id' => $request->product_id,
+            'order_id'=> $request->order_id,
             'amount' => $request->amount,
             'price' => $request->price,
         ]);
         return response()->json(['200' => 'success']);
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\OrderList  $orderList
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $show = Product::where('id', $id)->get();
+        $show = OrderList::join('products', 'products.id', '=', 'order_lists.product_id')
+        ->join('orders', 'orders.id', '=', 'order_lists.order_id')
+        ->select('order_lists.*', 'products.name', 'orders.*')
+        ->where('order_lists.id', $id)
+        ->get();
+
         return $show;
     }
 
+    /**
+     * Display the specified resource where order_id = param.
+     *
+     * @param  \App\Models\OrderList  $orderList
+     * @return \Illuminate\Http\Response
+     */
     public function order($id)
     {
-        $show = Product::find($id)
-        ->orders()
+        $show = OrderList::join('products', 'products.id', '=', 'order_lists.product_id')
+        ->join('orders', 'orders.id', '=', 'order_lists.order_id')
+        ->select('order_lists.*', 'products.name', 'orders.*')
+        ->where('order_lists.order_id', $id)
         ->get();
+
         return $show;
     }
+
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\OrderList  $orderList
      * @return \Illuminate\Http\Response
      */
-    public function edit($id_product)
+    public function edit(OrderList $orderList)
     {
-        
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\OrderList  $orderList
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, OrderList $orderList)
     {
-        $edited = Product::find($request->id_product);
-
+        $edited = OrderList::find($request->order_id);
 
         $name = $request->name;
         $category = $request->category;
@@ -124,12 +137,12 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\OrderList  $orderList
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(OrderList $orderList)
     {
-        $destroy = Product::find($product);
+        $destroy = OrderList::find($orderList);
         $destroy->delete();
         return response()->json(['200' => 'success']);
     }
