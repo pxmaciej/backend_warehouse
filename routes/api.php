@@ -75,3 +75,18 @@ Route::group([
     Route::post('update', [App\Http\Controllers\OrderListController::class, 'update']);
     Route::delete('destroy/{id}', [App\Http\Controllers\OrderListController::class, 'destroy']);
 });
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'statistic'
+
+], function ($router) {
+
+    Route::get('index', [App\Http\Controllers\StatisticController::class, 'index']);
+    Route::post('store', [App\Http\Controllers\StatisticController::class, 'store']);
+    Route::get('show/{id}', [App\Http\Controllers\StatisticController::class, 'show']);
+    Route::get('order/{id}', [App\Http\Controllers\StatisticController::class, 'order']);
+    Route::post('update', [App\Http\Controllers\StatisticController::class, 'update']);
+    Route::delete('destroy/{id}', [App\Http\Controllers\StatisticController::class, 'destroy']);
+});
