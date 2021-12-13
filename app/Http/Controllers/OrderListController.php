@@ -116,17 +116,15 @@ class OrderListController extends Controller
      */
     public function update(Request $request, OrderList $orderList)
     {
-        $edited = OrderList::find($request->order_id);
+        $edited = OrderList::find($request->id);
 
-        $name = $request->name;
-        $category = $request->category;
-        $company = $request->company;
+        $product_id = $request->product_id;
+        $order_id = $request->order_id;
         $amount = $request->amount;
         $price = $request->price;
 
-        $edited->name = $name;
-        $edited->category = $category;
-        $edited->company = $company;
+        $edited->product_id = $product_id ;
+        $edited->order_id = $order_id;
         $edited->amount = $amount;
         $edited->price = $price;
         $edited->save();
