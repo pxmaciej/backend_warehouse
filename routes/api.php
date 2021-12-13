@@ -90,3 +90,18 @@ Route::group([
     Route::post('update', [App\Http\Controllers\StatisticController::class, 'update']);
     Route::delete('destroy/{id}', [App\Http\Controllers\StatisticController::class, 'destroy']);
 });
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'alert'
+
+], function ($router) {
+
+    Route::get('index', [App\Http\Controllers\AlertController::class, 'index']);
+    Route::post('store', [App\Http\Controllers\AlertController::class, 'store']);
+    Route::get('show/{id}', [App\Http\Controllers\AlertController::class, 'show']);
+    Route::get('order/{id}', [App\Http\Controllers\AlertController::class, 'order']);
+    Route::post('update', [App\Http\Controllers\AlertController::class, 'update']);
+    Route::delete('destroy/{id}', [App\Http\Controllers\AlertController::class, 'destroy']);
+});
