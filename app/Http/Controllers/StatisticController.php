@@ -72,7 +72,7 @@ class StatisticController extends Controller
     public function show($id)
     {
         $show = Statistic::join('products', 'products.id', '=', 'statistics.product_id')
-        ->select('products.name','statistics.*')
+        ->select('products.name as product_name','statistics.*')
         ->where('statistics.id', $id)
         ->get();
 

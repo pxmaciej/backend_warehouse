@@ -65,11 +65,11 @@ class AlertController extends Controller
      * @param  \App\Models\Alert  $alert
      * @return \Illuminate\Http\Response
      */
-    public function show(Alert $alert)
+    public function show($id)
     {
         $show = Alert::join('products', 'products.id', '=', 'alerts.product_id')
-        ->select('products.name','alerts.*')
-        ->where('alert.id', $id)
+        ->select('products.name as product_name','alerts.*')
+        ->where('alerts.id', $id)
         ->get();
 
         return $show;

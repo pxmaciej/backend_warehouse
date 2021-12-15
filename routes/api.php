@@ -23,12 +23,12 @@ Route::group([
     Route::get('users', [App\Http\Controllers\AuthController::class, 'allUserProfile'])->middleware('roles:admin');
     Route::post('login', [App\Http\Controllers\AuthController::class, 'login']);
     Route::post('checkToken', [App\Http\Controllers\AuthController::class, 'checkToken']);
-    Route::post('register', [App\Http\Controllers\AuthController::class, 'register']);
+    Route::post('register', [App\Http\Controllers\AuthController::class, 'register'])->middleware('roles:admin');
     Route::patch('update', [App\Http\Controllers\AuthController::class, 'update']);
     Route::post('logout', [App\Http\Controllers\AuthController::class, 'logout']);
     Route::post('refresh', [App\Http\Controllers\AuthController::class, 'refresh']);
     Route::post('profile', [App\Http\Controllers\AuthController::class, 'userProfile']);
-    Route::delete('destroy/{id}', [App\Http\Controllers\AuthController::class, 'destroy']);
+    Route::delete('destroy/{id}', [App\Http\Controllers\AuthController::class, 'destroy'])->middleware('roles:admin');;
 });
 
 Route::group([
@@ -83,12 +83,11 @@ Route::group([
 
 ], function ($router) {
 
-    Route::get('index', [App\Http\Controllers\StatisticController::class, 'index']);
-    Route::post('store', [App\Http\Controllers\StatisticController::class, 'store']);
-    Route::get('show/{id}', [App\Http\Controllers\StatisticController::class, 'show']);
-    Route::get('order/{id}', [App\Http\Controllers\StatisticController::class, 'order']);
-    Route::post('update', [App\Http\Controllers\StatisticController::class, 'update']);
-    Route::delete('destroy/{id}', [App\Http\Controllers\StatisticController::class, 'destroy']);
+    Route::get('index', [App\Http\Controllers\StatisticController::class, 'index'])->middleware('roles:admin');
+    Route::post('store', [App\Http\Controllers\StatisticController::class, 'store'])->middleware('roles:admin');
+    Route::get('show/{id}', [App\Http\Controllers\StatisticController::class, 'show'])->middleware('roles:admin');
+    Route::post('update', [App\Http\Controllers\StatisticController::class, 'update'])->middleware('roles:admin');
+    Route::delete('destroy/{id}', [App\Http\Controllers\StatisticController::class, 'destroy'])->middleware('roles:admin');
 });
 
 Route::group([
@@ -99,9 +98,8 @@ Route::group([
 ], function ($router) {
 
     Route::get('index', [App\Http\Controllers\AlertController::class, 'index']);
-    Route::post('store', [App\Http\Controllers\AlertController::class, 'store']);
-    Route::get('show/{id}', [App\Http\Controllers\AlertController::class, 'show']);
-    Route::get('order/{id}', [App\Http\Controllers\AlertController::class, 'order']);
-    Route::post('update', [App\Http\Controllers\AlertController::class, 'update']);
-    Route::delete('destroy/{id}', [App\Http\Controllers\AlertController::class, 'destroy']);
+    Route::post('store', [App\Http\Controllers\AlertController::class, 'store'])->middleware('roles:admin');
+    Route::get('show/{id}', [App\Http\Controllers\AlertController::class, 'show'])->middleware('roles:admin');
+    Route::post('update', [App\Http\Controllers\AlertController::class, 'update'])->middleware('roles:admin');
+    Route::delete('destroy/{id}', [App\Http\Controllers\AlertController::class, 'destroy'])->middleware('roles:admin');
 });
