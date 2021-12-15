@@ -107,7 +107,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        $edited = Order::find($request->id_order);
+        $edited = Order::find($request->id);
 
 
         $nameBuyer = $request->nameBuyer;
@@ -128,7 +128,7 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
+    public function destroy($order)
     {
         $destroy = Order::find($order);
         $destroy->delete();

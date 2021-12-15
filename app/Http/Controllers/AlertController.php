@@ -113,7 +113,7 @@ class AlertController extends Controller
      * @param  \App\Models\Alert  $alert
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Alert $alert)
+    public function destroy($alert)
     {
         $destroy = Alert::find($statistic);
         $destroy->delete();

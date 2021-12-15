@@ -127,11 +127,15 @@ class AuthController extends Controller
             return response()->json(['error' => $validator->messages()],401);
 
         }
+            $name = $request->name;
+            $role = $request->role;
+            $email = $request->email;
+            $password = $request->password;
 
-            $edited->name = $request->name;
-            $edited->role = $request->role;
-            $edited->email = $request->email;
-            $edited->password = bcrypt($request->password);
+            $edited->name = $name;
+            $edited->role = $role;
+            $edited->email = $email;
+            $edited->password = bcrypt($password);
             $edited->save();
 
         return response()->json([

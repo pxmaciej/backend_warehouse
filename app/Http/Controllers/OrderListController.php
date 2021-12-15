@@ -138,7 +138,7 @@ class OrderListController extends Controller
      * @param  \App\Models\OrderList  $orderList
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OrderList $orderList)
+    public function destroy($orderList)
     {
         $destroy = OrderList::find($orderList);
         $destroy->delete();

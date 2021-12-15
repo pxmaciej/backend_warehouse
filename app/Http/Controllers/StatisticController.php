@@ -121,7 +121,7 @@ class StatisticController extends Controller
      * @param  \App\Models\Statistic  $statistic
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Statistic $statistic)
+    public function destroy($statistic)
     {
         $destroy = Statistic::find($statistic);
         $destroy->delete();
