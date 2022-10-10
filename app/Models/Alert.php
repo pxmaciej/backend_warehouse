@@ -9,4 +9,9 @@ class Alert extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $fillable = [
+        'id',
+        'product_id',
+        'name',
+    ];
 }

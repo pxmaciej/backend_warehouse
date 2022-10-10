@@ -42,7 +42,7 @@ Route::group([
     Route::post('store', [App\Http\Controllers\ProductController::class, 'store']);
     Route::get('show/{id}', [App\Http\Controllers\ProductController::class, 'show']);
     Route::get('order/{id}', [App\Http\Controllers\ProductController::class, 'order']);
-    Route::post('update', [App\Http\Controllers\ProductController::class, 'update']);
+    Route::patch('update/{id}', [App\Http\Controllers\ProductController::class, 'update']);
     Route::delete('destroy/{id}', [App\Http\Controllers\ProductController::class, 'destroy']);
 });
 
@@ -57,7 +57,7 @@ Route::group([
     Route::post('store', [App\Http\Controllers\OrderController::class, 'store']);
     Route::get('show/{id}', [App\Http\Controllers\OrderController::class, 'show']);
     Route::get('product/{id}', [App\Http\Controllers\OrderController::class, 'product']);
-    Route::post('update', [App\Http\Controllers\OrderController::class, 'update']);
+    Route::patch('update/{id}', [App\Http\Controllers\OrderController::class, 'update']);
     Route::delete('destroy/{id}', [App\Http\Controllers\OrderController::class, 'destroy']);
 });
 
@@ -72,7 +72,7 @@ Route::group([
     Route::post('store', [App\Http\Controllers\OrderListController::class, 'store']);
     Route::get('show/{id}', [App\Http\Controllers\OrderListController::class, 'show']);
     Route::get('order/{id}', [App\Http\Controllers\OrderListController::class, 'order']);
-    Route::post('update', [App\Http\Controllers\OrderListController::class, 'update']);
+    Route::patch('update/{id}', [App\Http\Controllers\OrderListController::class, 'update']);
     Route::delete('destroy/{id}', [App\Http\Controllers\OrderListController::class, 'destroy']);
 });
 
@@ -86,7 +86,7 @@ Route::group([
     Route::get('index', [App\Http\Controllers\StatisticController::class, 'index'])->middleware('roles:admin');
     Route::post('store', [App\Http\Controllers\StatisticController::class, 'store'])->middleware('roles:admin');
     Route::get('show/{id}', [App\Http\Controllers\StatisticController::class, 'show'])->middleware('roles:admin');
-    Route::post('update', [App\Http\Controllers\StatisticController::class, 'update'])->middleware('roles:admin');
+    Route::patch('update/{id}', [App\Http\Controllers\StatisticController::class, 'update'])->middleware('roles:admin');
     Route::delete('destroy/{id}', [App\Http\Controllers\StatisticController::class, 'destroy'])->middleware('roles:admin');
 });
 
@@ -100,6 +100,6 @@ Route::group([
     Route::get('index', [App\Http\Controllers\AlertController::class, 'index']);
     Route::post('store', [App\Http\Controllers\AlertController::class, 'store'])->middleware('roles:admin');
     Route::get('show/{id}', [App\Http\Controllers\AlertController::class, 'show'])->middleware('roles:admin');
-    Route::post('update', [App\Http\Controllers\AlertController::class, 'update'])->middleware('roles:admin');
+    Route::patch('update/{id}', [App\Http\Controllers\AlertController::class, 'update'])->middleware('roles:admin');
     Route::delete('destroy/{id}', [App\Http\Controllers\AlertController::class, 'destroy'])->middleware('roles:admin');
 });

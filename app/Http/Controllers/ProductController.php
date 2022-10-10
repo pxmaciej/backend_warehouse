@@ -2,135 +2,148 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Exceptions\ProductValidatorException;
+use App\Validator\ProductValidator;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-    public function __construct() 
+    /**
+     * @var ProductInterface
+     */
+    private $productRepository;
+
+    /**
+     * @var ProductValidator
+     */
+    private $productValidator;
+
+    public function __construct(ProductInterface $productRepository, ProductValidator $productValidator)
     {
-        //$this->middleware('auth:api');
+        $this->middleware('auth:api');
+
+        $this->productRepository = $productRepository;
+        $this->productValidator = $productValidator;
+
     }
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        $show = Product::get();
-        return response()->json([$show]);
+        $product = $this->productRepository->getAll();
+
+        return response()->json($product, 200);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
-        //
-    }
+        try {
+            $validator = $this->productValidator->nameCategoryCompanyAMountPriceRequired($request);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'category' => 'required|string',
-            'company' => 'required|string',
-            'amount' => 'required',
-            'price'=> 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()],401);
-
+            if ($validator) {
+                $product = $this->productRepository->setData($request);
+            }
+        } catch (ProductValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json(null, 500);
         }
 
-        Product::create([
-            'name' => $request->name,
-            'category'=> $request->category,
-            'company' => $request->company,
-            'amount' => $request->amount,
-            'price' => $request->price,
-        ]);
-        return response()->json(['200' => 'success']);
+        return response()->json($product, 200);
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Product $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id): \Illuminate\Http\JsonResponse
     {
-        $show = Product::where('id', $id)->get();
-        return $show;
-    }
+        try {
+            $validator = $this->productValidator->validateId($id);
 
-    public function order($id)
-    {
-        $show = Product::find($id)
-        ->orders()
-        ->get();
-        return $show;
-    }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id_product)
-    {
-        
+            if ($validator) {
+                $orderList = $this->productRepository->show($id);
+            }
+        } catch (ProductValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json(null, 500);
+        }
+
+        return response()->json($orderList, 200);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function order(int $id): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $validator = $this->productValidator->validateId($id);
+
+            if ($validator) {
+                $products = $this->productRepository->showProductByIdRelationToOrder($id);
+            }
+        } catch (ProductValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json(null, 500);
+        }
+
+        return response()->json($products, 200);
+    }
+
+    /**
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Product $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request)
+    public function update(Request $request, int $id)
     {
-        $edited = Product::find($request->id_product);
+        try {
 
+            $validatorId = $this->productValidator->validateId($id);
 
-        $name = $request->name;
-        $category = $request->category;
-        $company = $request->company;
-        $amount = $request->amount;
-        $price = $request->price;
+            if ($validatorId) {
+                $product = $this->productRepository->update($id, $request);
+            }
+        } catch (ProductValidatorException $e) {
+            return response()->json($e->getMessage(),400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
 
-        $edited->name = $name;
-        $edited->category = $category;
-        $edited->company = $company;
-        $edited->amount = $amount;
-        $edited->price = $price;
-        $edited->save();
-
-        return response()->json(['200' => 'success']);
+        return response()->json($product, 200);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Product $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($product)
+    public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
-        $destroy = Product::find($product);
-        $destroy->delete();
-        return response()->json(['200' => 'success']);
+        try {
+            $validatorId = $this->productValidator->validateId($id);
+
+            if ($validatorId) {
+                $product = $this->productRepository->destroy($id);
+            }
+        }catch (ProductValidatorException $e) {
+            return response()->json($e->getMessage(),400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+
+        return response()->json(null, 200);
     }
 }

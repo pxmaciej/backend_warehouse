@@ -2,136 +2,149 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\OrderValidatorException;
 use App\Models\Order;
+use App\Validator\OrderValidator;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
-
-    public function __construct() 
-    {
-        //$this->middleware('auth:api');
-    }
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var OrderInterface
      */
-    public function index()
-    {
-        $show = Order::get();
-        return response()->json([$show]);
-    }
+    private $orderRepository;
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var OrderValidator
      */
-    public function create()
+    private $orderValidator;
+
+
+    public function __construct(OrderInterface $orderRepository, OrderValidator $orderValidator)
     {
-        //
+        $this->middleware('auth:api');
+
+        $this->orderRepository = $orderRepository;
+        $this->orderValidator = $orderValidator;
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'nameBuyer' => 'required|string',
-            'dateOrder' => 'required',
-            'dateDeliver' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()],401);
+        $order = $this->orderRepository->getAll();
+
+        return response()->json($order, 200);
+    }
+
+    /**
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $validator = $this->orderValidator->nameBuyerAndDateOrderDeliverRequired($request);
+
+            if ($validator) {
+                $order = $this->orderRepository->setData($request);
+            }
+        } catch (OrderValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json(null, 500);
         }
 
-
-        Order::create([
-            'nameBuyer' => $request->nameBuyer,
-            'dateOrder'=> $request->dateOrder,
-            'dateDeliver' => $request->dateDeliver,
-        ]);
-        return response()->json(['200' => 'success']);
+        return response()->json($order, 200);
 
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Order $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id): \Illuminate\Http\JsonResponse
     {
-        $show = Order::where('id', $id)->get();
-        return $show;
+        try {
+            $validator = $this->orderValidator->validateId($id);
+
+            if ($validator) {
+                $order = $this->orderRepository->show($id);
+            }
+        } catch (OrderValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json(null, 500);
+        }
+
+        return response()->json($order, 200);
     }
 
     /**
-     * Display the specified resource in relationship.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Order $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function product($id)
+    public function product(int $id): \Illuminate\Http\JsonResponse
     {
-        $show = Order::find($id)
-        ->products()
-        ->get();
-        return $show;
+        try {
+            $validator = $this->orderValidator->validateId($id);
+
+            if ($validator) {
+                $order = $this->orderRepository->showOrderByIdRelationToProduct($id);
+            }
+        } catch (OrderValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json(null, 500);
+        }
+
+        return response()->json($order, 200);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Order  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Order $order)
+    public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
-        $edited = Order::find($request->id);
+        try {
 
+            $validatorId = $this->orderValidator->validateId($id);
 
-        $nameBuyer = $request->nameBuyer;
-        $dateOrder = $request->dateOrder;
-        $dateDeliver = $request->dateDeliver;
+            if ($validatorId) {
+                $order = $this->orderRepository->update($id, $request);
+            }
 
-        $edited->nameBuyer = $nameBuyer;
-        $edited->dateOrder = $dateOrder;
-        $edited->dateDeliver = $dateDeliver;
-        $edited->save();
+        } catch (OrderValidatorException $e) {
+            return response()->json($e->getMessage(),400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
 
-        return response()->json(['200' => 'success']);
+        return response()->json($order, 200);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Order  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($order)
+    public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
-        $destroy = Order::find($order);
-        $destroy->delete();
-        return response()->json(['200' => 'success']);
+        try {
+            $validatorId = $this->orderValidator->validateId($id);
+
+            if ($validatorId) {
+                $order = $this->orderRepository->destroy($id);
+            }
+        }catch (OrderValidatorException $e) {
+            return response()->json($e->getMessage(),400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+
+        return response()->json(null, 200);
     }
 }

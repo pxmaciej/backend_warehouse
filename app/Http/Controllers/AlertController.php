@@ -2,121 +2,127 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\AlertValidatorException;
 use App\Models\Alert;
+use App\Http\Controllers\AlertInterface;
+use App\Validator\AlertValidator;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class AlertController extends Controller
 {
+    /**
+     * @var AlertInterface
+     */
+    private $alertRepository;
 
-    public function __construct() 
+    /**
+     * @var AlertValidator
+     */
+    private $alertValidator;
+
+    public function __construct(AlertInterface $alertRepository, AlertValidator $alertValidator)
     {
        // $this->middleware('auth:api');
+        $this->alertRepository = $alertRepository;
+        $this->alertValidator = $alertValidator;
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $show = Alert::get();
-        return response()->json([$show]);
+        $alerts = $this->alertRepository->getAll();
+
+        return response()->json($alerts, 200);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'product_id' => 'required',
-            'name' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()],401);
+        try {
+            $validator = $this->alertValidator->productIdAndNameRequired($request);
 
+            if ($validator) {
+                $alerts = $this->alertRepository->setData($request);
+            }
+        } catch (AlertValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json(null, 500);
         }
 
-        Alert::create([
-            'product_id' => $request->product_id,
-            'name'=> $request->name,
-        ]);
-        return response()->json(['200' => 'success']);
+        return response()->json($alerts, 200);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Alert  $alert
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Alert $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id)
     {
-        $show = Alert::join('products', 'products.id', '=', 'alerts.product_id')
-        ->select('products.name as product_name','alerts.*')
-        ->where('alerts.id', $id)
-        ->get();
+        try {
+            $validator = $this->alertValidator->validateId($id);
 
-        return $show;
+            if ($validator) {
+                $alert = $this->alertRepository->productNameJoinToAlertById($id);
+            }
+        } catch (AlertValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json(null, 500);
+        }
+
+        return response()->json($alert, 200);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Alert  $alert
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Alert $id
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Alert $alert)
+    public function update(Request $request, int $id)
     {
-        //
-    }
+        try {
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Alert  $alert
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Alert $alert)
-    {
-        $edited = Alert::find($request->id);
+            $validatorId = $this->alertValidator->validateId($id);
 
-        $product_id = $request->product_id;
-        $name = $request->name;
-        
-        $edited->product_id = $product_id ;
-        $edited->name = $name;
-        $edited->save();
+            if ($validatorId) {
+                $alert = $this->alertRepository->update($id, $request);
+            }
 
-        return response()->json(['200' => 'success']);
+        } catch (AlertValidatorException $e) {
+            return response()->json($e->getMessage(),400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+        return response()->json($alert, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Alert  $alert
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Alert $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($alert)
+    public function destroy(int $id)
     {
-        $destroy = Alert::find($statistic);
-        $destroy->delete();
-        return response()->json(['200' => 'success']);
+        try {
+            $validatorId = $this->alertValidator->validateId($id);
+
+            if ($validatorId) {
+                $alert = $this->alertRepository->destroy($id);
+            }
+        }catch (AlertValidatorException $e) {
+            return response()->json($e->getMessage(),400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+        return response()->json(null, 200);
     }
 }

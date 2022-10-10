@@ -2,146 +2,147 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OrderList;
+use App\Exceptions\OrderListValidatorException;
+use App\Validator\OrderListValidator;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class OrderListController extends Controller
 {
-    public function __construct() 
+    /**
+     * @var OrderListInterface
+     */
+    private $orderListRepository;
+
+    /**
+     * @var OrderListValidator
+     */
+    private $orderListValidator;
+
+    public function __construct(OrderListInterface $orderListRepository, OrderListValidator $orderListValidator)
     {
-       // $this->middleware('auth:api');
+        $this->middleware('auth:api');
+        $this->orderListRepository = $orderListRepository;
+        $this->orderListValidator = $orderListValidator;
     }
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        $show = OrderList::get();
-        return response()->json([$show]);
+        $order = $this->orderListRepository->getAll();
+
+        return response()->json($order, 200);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'product_id' => 'required',
-            'order_id' => 'required',
-            'amount' => 'required',
-            'price'=> 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()],401);
+        try {
+            $validator = $this->orderListValidator->productIdOrderIdAmountPriceRequired($request);
 
+            if ($validator) {
+                $orderList = $this->orderListRepository->setData($request);
+            }
+        } catch (OrderListValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json(null, 500);
         }
 
-        OrderList::create([
-            'product_id' => $request->product_id,
-            'order_id'=> $request->order_id,
-            'amount' => $request->amount,
-            'price' => $request->price,
-        ]);
-        return response()->json(['200' => 'success']);
+        return response()->json($orderList, 200);
 
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\OrderList  $orderList
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\OrderList $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id): \Illuminate\Http\JsonResponse
     {
-        $show = OrderList::join('products', 'products.id', '=', 'order_lists.product_id')
-        ->join('orders', 'orders.id', '=', 'order_lists.order_id')
-        ->select('order_lists.*', 'products.name', 'orders.*')
-        ->where('order_lists.id', $id)
-        ->get();
+        try {
+            $validator = $this->orderListValidator->validateId($id);
 
-        return $show;
+            if ($validator) {
+                $orderList = $this->orderListRepository->show($id);
+            }
+        } catch (OrderListValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json(null, 500);
+        }
+
+        return response()->json($orderList, 200);
     }
 
     /**
-     * Display the specified resource where order_id = param.
-     *
-     * @param  \App\Models\OrderList  $orderList
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\OrderList $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function order($id)
+    public function order(int $id): \Illuminate\Http\JsonResponse
     {
-        $show = OrderList::join('products', 'products.id', '=', 'order_lists.product_id')
-        ->join('orders', 'orders.id', '=', 'order_lists.order_id')
-        ->select('order_lists.*', 'products.name', 'orders.*')
-        ->where('order_lists.order_id', $id)
-        ->get();
+        try {
+            $validator = $this->orderListValidator->validateId($id);
 
-        return $show;
+            if ($validator) {
+                $productList = $this->orderListRepository->showProductByIdRelationToOrder($id);
+            }
+        } catch (OrderListValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json(null, 500);
+        }
+
+        return response()->json($productList, 200);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\OrderList  $orderList
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(OrderList $orderList)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\OrderList  $orderList
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\OrderList $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, OrderList $orderList)
+    public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
-        $edited = OrderList::find($request->id);
+        try {
 
-        $product_id = $request->product_id;
-        $order_id = $request->order_id;
-        $amount = $request->amount;
-        $price = $request->price;
+            $validatorId = $this->orderListValidator->validateId($id);
 
-        $edited->product_id = $product_id ;
-        $edited->order_id = $order_id;
-        $edited->amount = $amount;
-        $edited->price = $price;
-        $edited->save();
+            if ($validatorId) {
+                $orderList = $this->orderListRepository->update($id, $request);
+            }
 
-        return response()->json(['200' => 'success']);
+        } catch (OrderListValidatorException $e) {
+            return response()->json($e->getMessage(),400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+
+        return response()->json($orderList, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\OrderList  $orderList
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\OrderList  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($orderList)
+    public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
-        $destroy = OrderList::find($orderList);
-        $destroy->delete();
-        return response()->json(['200' => 'success']);
+        try {
+            $validatorId = $this->orderListValidator->validateId($id);
+
+            if ($validatorId) {
+                $orderList = $this->orderListRepository->destroy($id);
+            }
+        }catch (OrderListValidatorException $e) {
+            return response()->json($e->getMessage(),400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+
+        return response()->json(null, 200);
     }
 }
