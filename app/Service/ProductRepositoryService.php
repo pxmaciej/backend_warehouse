@@ -50,7 +50,7 @@ class ProductRepositoryService implements ProductInterface
      */
     public function update($id, $request)
     {
-        $this->checkProductIdExist($request->product_id);
+        $this->checkProductIdExist($id);
 
         $product = Product::find($id);
         $product->fill($request->all())->save();
