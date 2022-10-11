@@ -2,129 +2,118 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Statistic;
+use App\Exceptions\StatisticValidatorException;
+use App\Validator\StatisticValidator;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class StatisticController extends Controller
 {
+    private $statisticRepository;
 
-    public function __construct() 
+    private $statisticValidator;
+
+    public function __construct(StatisticInterface $statisticRepository, StatisticValidator $statisticValidator)
     {
        $this->middleware('auth:api');
+
+       $this->statisticRepository = $statisticRepository;
+       $this->statisticValidator = $statisticValidator;
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        $show = Statistic::get();
-        return response()->json([$show]);
+        $product = $this->statisticRepository->getAll();
+
+        return response()->json($product, 200);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
-        //
-    }
+        try {
+            $validator = $this->statisticValidator->nameCategoryCompanyAMountPriceRequired($request);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'product_id' => 'required',
-            'name' => 'required',
-            'amount' => 'required',
-            'price'=> 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()],401);
-
+            if ($validator) {
+                $statistic = $this->statisticRepository->setData($request);
+            }
+        } catch (StatisticValidatorException $e) {
+            return response()->json(null,400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
         }
 
-        Statistic::create([
-            'product_id' => $request->product_id,
-            'name'=> $request->name,
-            'amount' => $request->amount,
-            'price' => $request->price,
-        ]);
-        return response()->json(['200' => 'success']);
+        return response()->json($statistic, 200);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Statistic  $statistic
-     * @return \Illuminate\Http\Response
+     * @param  int $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id): \Illuminate\Http\JsonResponse
     {
-        $show = Statistic::join('products', 'products.id', '=', 'statistics.product_id')
-        ->select('products.name as product_name','statistics.*')
-        ->where('statistics.id', $id)
-        ->get();
+        try {
+            $validator = $this->statisticValidator->validateId($id);
 
-        return $show;
+            if ($validator) {
+                $statistic = $this->statisticRepository->show($id);
+            }
+        } catch (StatisticValidatorException $e) {
+            return response()->json($e->getMessage(),400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+
+        return response()->json($statistic, 200);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Statistic  $statistic
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Statistic $statistic)
+    public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
-        //
+        try {
+            $validatorId = $this->statisticValidator->validateId($id);
+
+            if ($validatorId) {
+                $statistic = $this->statisticRepository->update($id, $request);
+            }
+        } catch (StatisticValidatorException $e) {
+            return response()->json($e->getMessage(),400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+
+        return response()->json($statistic, 200);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Statistic  $statistic
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Statistic $statistic)
+    public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
-        $edited = Statistic::find($request->id);
 
-        $product_id = $request->product_id;
-        $name = $request->name;
-        $amount = $request->amount;
-        $price = $request->price;
+        try {
+            $validatorId = $this->statisticValidator->validateId($id);
 
-        $edited->product_id = $product_id ;
-        $edited->name = $name;
-        $edited->amount = $amount;
-        $edited->price = $price;
-        $edited->save();
+            if ($validatorId) {
+                $this->statisticRepository->destroy($id);
+            }
+        }catch (StatisticValidatorException $e) {
+            return response()->json($e->getMessage(),400);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
 
-        return response()->json(['200' => 'success']);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Statistic  $statistic
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($statistic)
-    {
-        $destroy = Statistic::find($statistic);
-        $destroy->delete();
-        return response()->json(['200' => 'success']);
+        return response()->json(null, 200);
     }
 }

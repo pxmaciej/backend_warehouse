@@ -2,23 +2,29 @@
 
 namespace App\Service;
 
-use App\Http\Controllers\ProductInterface;
+
+use App\Exceptions\StatisticValidatorException;
+use App\Http\Controllers\StatisticInterface;
 use App\Models\Product;
 use App\Models\Statistic;
 
-class StatisticRepositoryService implements ProductInterface
+class StatisticRepositoryService implements StatisticInterface
 {
     public function getAll()
     {
         return Statistic::get();
     }
 
+    /**
+     * @throws StatisticValidatorException
+     */
     public function setData($request)
     {
+        $this->checkProductIdExist($request->product_id);
+
         return Statistic::create([
-            'name' => $request->name,
-            'category'=> $request->category,
-            'company' => $request->company,
+            'product_id' => $request->product_id,
+            'name'=> $request->name,
             'amount' => $request->amount,
             'price' => $request->price,
         ]);
@@ -26,29 +32,63 @@ class StatisticRepositoryService implements ProductInterface
 
     public function show($id)
     {
-        return Statistic::where('id', $id)->get();
+        $this->checkStatisticIdExist($id);
+
+        return Statistic::join('products', 'products.id', '=', 'statistics.product_id')
+            ->select('products.name as product_name','statistics.*')
+            ->where('statistics.id', $id)
+            ->get();
     }
 
-    public function destroy($id)
+    public function destroy($id): bool
     {
-        $product = Statistic::find($id);
-        $product->orders()->detach();
-        $product->delete();
+        $this->checkStatisticIdExist($id);
+
+        $statistic = Statistic::find($id);
+        $statistic->delete();
 
         return true;
     }
 
+    /**
+     * @throws StatisticValidatorException
+     */
     public function update($id, $request)
     {
-        $product = Statistic::find($id);
-        $product->fill($request->input())->save();
-        return $product;
+        $this->checkStatisticIdExist($id);
+
+        $statistic = Statistic::find($id);
+
+        $this->checkProductIdExist($request->product_id);
+
+        $statistic->fill($request->all())->save();
+
+        return $statistic;
     }
 
-    public function showProductByIdRelationToOrder($id)
+    /**
+     * @throws StatisticValidatorException
+     */
+    public function checkProductIdExist($product_id): bool
     {
-        return Statistic::find($id)
-            ->orders()
-            ->get();
+        $product = Product::find($product_id);
+        if ($product === null) {
+            throw new StatisticValidatorException();
+        }
+
+        return true;
+    }
+
+    /**
+     * @throws StatisticValidatorException
+     */
+    public function checkStatisticIdExist($id): bool
+    {
+        $product = Statistic::find($id);
+        if ($product === null) {
+            throw new StatisticValidatorException();
+        }
+
+        return true;
     }
 }

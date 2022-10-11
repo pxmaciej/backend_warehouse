@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exceptions\ProductValidatorException;
 use App\Http\Controllers\ProductInterface;
 use App\Models\Product;
 
@@ -23,13 +24,20 @@ class ProductRepositoryService implements ProductInterface
         ]);
     }
 
+    /**
+     * @throws ProductValidatorException
+     */
     public function show($id)
     {
+        $this->checkProductIdExist($id);
+
         return Product::where('id', $id)->get();
     }
 
     public function destroy($id)
     {
+        $this->checkProductIdExist($id);
+
         $product = Product::find($id);
         $product->orders()->detach();
         $product->delete();
@@ -37,10 +45,16 @@ class ProductRepositoryService implements ProductInterface
         return true;
     }
 
+    /**
+     * @throws ProductValidatorException
+     */
     public function update($id, $request)
     {
+        $this->checkProductIdExist($request->product_id);
+
         $product = Product::find($id);
-        $product->fill($request->input())->save();
+        $product->fill($request->all())->save();
+
         return $product;
     }
 
@@ -49,5 +63,18 @@ class ProductRepositoryService implements ProductInterface
         return Product::find($id)
             ->orders()
             ->get();
+    }
+
+    /**
+     * @throws ProductValidatorException
+     */
+    public function checkProductIdExist($product_id): bool
+    {
+        $product = Product::find($product_id);
+        if ($product === null) {
+            throw new ProductValidatorException();
+        }
+
+        return true;
     }
 }

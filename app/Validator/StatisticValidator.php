@@ -3,6 +3,7 @@
 namespace App\Validator;
 
 use App\Exceptions\ProductValidatorException;
+use App\Exceptions\StatisticValidatorException;
 use Illuminate\Support\Facades\Validator;
 
 class StatisticValidator
@@ -19,22 +20,21 @@ class StatisticValidator
     /**
      * @param $request
      * @return bool
-     * @throws ProductValidatorException
+     * @throws StatisticValidatorException
      */
     public function nameCategoryCompanyAMountPriceRequired($request): bool
     {
         $validator = $this->validator::make($request->all(),
             [
-                'name' => 'required|string',
-                'category' => 'required|string',
-                'company' => 'required|string',
+                'product_id' => 'required',
+                'name' => 'required',
                 'amount' => 'required',
                 'price'=> 'required',
             ]
         );
 
         if ($validator->fails()) {
-            throw new ProductValidatorException();
+            throw new StatisticValidatorException();
         }
 
         return  true;
@@ -43,12 +43,12 @@ class StatisticValidator
     /**
      * @param $id
      * @return bool
-     * @throws ProductValidatorException
+     * @throws StatisticValidatorException
      */
     public function validateId($id): bool
     {
         if (!is_numeric($id) && is_null($id)) {
-            throw new ProductValidatorException();
+            throw new StatisticValidatorException();
         }
 
         return true;

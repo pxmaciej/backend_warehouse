@@ -14,5 +14,5 @@ interface StatisticInterface
 
     public function update($id, $request);
 
-    public function showProductByIdRelationToOrder($id);
+    public function checkProductIdExist($product_id);
 }
