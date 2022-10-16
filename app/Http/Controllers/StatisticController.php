@@ -47,7 +47,7 @@ class StatisticController extends Controller
         } catch (StatisticValidatorException $e) {
             return response()->json(null,400);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
 
         return response()->json($statistic, 200);
@@ -66,11 +66,11 @@ class StatisticController extends Controller
                 $statistic = $this->statisticRepository->show($id);
             }
         } catch (StatisticValidatorException $e) {
-            return response()->json($e->getMessage(),400);
+            return response()->json(null,400);
         } catch (NotFoundException $e) {
             return response()->json(null,404);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
 
         return response()->json($statistic, 200);
@@ -90,11 +90,11 @@ class StatisticController extends Controller
                 $statistic = $this->statisticRepository->update($id, $request);
             }
         } catch (StatisticValidatorException $e) {
-            return response()->json($e->getMessage(),400);
+            return response()->json(null,400);
         } catch (NotFoundException $e) {
             return response()->json(null,404);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
 
         return response()->json($statistic, 200);
@@ -114,11 +114,11 @@ class StatisticController extends Controller
                 $this->statisticRepository->destroy($id);
             }
         }catch (StatisticValidatorException $e) {
-            return response()->json($e->getMessage(),400);
+            return response()->json(null,400);
         } catch (NotFoundException $e) {
             return response()->json(null,404);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
 
         return response()->json(null, 200);

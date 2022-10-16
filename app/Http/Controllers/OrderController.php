@@ -124,11 +124,11 @@ class OrderController extends Controller
             }
 
         } catch (OrderValidatorException $e) {
-            return response()->json($e->getMessage(),400);
+            return response()->json(null,400);
         } catch (NotFoundException $e) {
             return response()->json(null,404);
         }catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
 
         return response()->json($order, 200);
@@ -147,11 +147,11 @@ class OrderController extends Controller
                 $this->orderRepository->destroy($id);
             }
         }catch (OrderValidatorException $e) {
-            return response()->json($e->getMessage(),400);
+            return response()->json(null,400);
         } catch (NotFoundException $e) {
             return response()->json(null,404);
         }catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
 
         return response()->json(null, 200);

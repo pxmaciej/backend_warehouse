@@ -104,7 +104,7 @@ class CategoryController extends Controller
         } catch (NotFoundException $e) {
             return response()->json(null,404);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
 
         return response()->json($category, 200);
@@ -127,7 +127,7 @@ class CategoryController extends Controller
         } catch (NotFoundException $e) {
             return response()->json(null,404);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
 
         return response()->json(null, 200);

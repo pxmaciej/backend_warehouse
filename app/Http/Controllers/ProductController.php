@@ -58,9 +58,9 @@ class ProductController extends Controller
             }
 
         } catch (ProductValidatorException $e) {
-            return response()->json($e->getMessage(),400);
+            return response()->json(null,400);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
 
         return response()->json($product, 200);
@@ -133,11 +133,11 @@ class ProductController extends Controller
                 $product->categories()->attach($categories);
             }
         } catch (ProductValidatorException $e) {
-            return response()->json($e->getMessage(),400);
+            return response()->json(null,400);
         } catch (NotFoundException $e) {
             return response()->json(null,404);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
 
         return response()->json($product, 200);
@@ -156,11 +156,11 @@ class ProductController extends Controller
                 $product = $this->productRepository->destroy($id);
             }
         }catch (ProductValidatorException $e) {
-            return response()->json($e->getMessage(),400);
+            return response()->json(null,400);
         } catch (NotFoundException $e) {
             return response()->json(null,404);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
 
         return response()->json(null, 200);
