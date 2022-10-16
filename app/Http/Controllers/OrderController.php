@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\NotFoundException;
 use App\Exceptions\OrderValidatorException;
 use App\Models\Order;
 use App\Validator\OrderValidator;
@@ -62,7 +63,7 @@ class OrderController extends Controller
     }
 
     /**
-     * @param  \App\Models\Order $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(int $id): \Illuminate\Http\JsonResponse
@@ -75,7 +76,9 @@ class OrderController extends Controller
             }
         } catch (OrderValidatorException $e) {
             return response()->json(null,400);
-        } catch (Exception $e) {
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
+        }catch (Exception $e) {
             return response()->json(null, 500);
         }
 
@@ -83,7 +86,7 @@ class OrderController extends Controller
     }
 
     /**
-     * @param  \App\Models\Order $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function product(int $id): \Illuminate\Http\JsonResponse
@@ -96,7 +99,9 @@ class OrderController extends Controller
             }
         } catch (OrderValidatorException $e) {
             return response()->json(null,400);
-        } catch (Exception $e) {
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
+        }catch (Exception $e) {
             return response()->json(null, 500);
         }
 
@@ -105,7 +110,7 @@ class OrderController extends Controller
 
     /**
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
@@ -120,7 +125,9 @@ class OrderController extends Controller
 
         } catch (OrderValidatorException $e) {
             return response()->json($e->getMessage(),400);
-        } catch (Exception $e) {
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
+        }catch (Exception $e) {
             return response()->json($e->getMessage(), 500);
         }
 
@@ -128,7 +135,7 @@ class OrderController extends Controller
     }
 
     /**
-     * @param  \App\Models\Order  $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(int $id): \Illuminate\Http\JsonResponse
@@ -137,11 +144,13 @@ class OrderController extends Controller
             $validatorId = $this->orderValidator->validateId($id);
 
             if ($validatorId) {
-                $order = $this->orderRepository->destroy($id);
+                $this->orderRepository->destroy($id);
             }
         }catch (OrderValidatorException $e) {
             return response()->json($e->getMessage(),400);
-        } catch (Exception $e) {
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
+        }catch (Exception $e) {
             return response()->json($e->getMessage(), 500);
         }
 

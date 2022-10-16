@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\NotFoundException;
 use App\Exceptions\ProductValidatorException;
 use App\Validator\ProductValidator;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -19,18 +21,20 @@ class ProductController extends Controller
      */
     private $productValidator;
 
-    public function __construct(ProductInterface $productRepository, ProductValidator $productValidator)
+    private $categoryRepository;
+
+    public function __construct(ProductInterface $productRepository, ProductValidator $productValidator, CategoryInterface $categoryRepository)
     {
         $this->middleware('auth:api');
 
         $this->productRepository = $productRepository;
         $this->productValidator = $productValidator;
-
+        $this->categoryRepository = $categoryRepository;
     }
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index(): JsonResponse
     {
         $product = $this->productRepository->getAll();
 
@@ -38,21 +42,25 @@ class ProductController extends Controller
     }
 
     /**
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request): \Illuminate\Http\JsonResponse
+    public function store(Request $request): JsonResponse
     {
         try {
             $validator = $this->productValidator->nameCategoryCompanyAMountPriceRequired($request);
 
             if ($validator) {
                 $product = $this->productRepository->setData($request);
+                $categories = $this->categoryRepository->findMany($request['categories']);
+
+                $product->categories()->attach($categories);
             }
+
         } catch (ProductValidatorException $e) {
-            return response()->json(null,400);
+            return response()->json($e->getMessage(),400);
         } catch (Exception $e) {
-            return response()->json(null, 500);
+            return response()->json($e->getMessage(), 500);
         }
 
         return response()->json($product, 200);
@@ -62,10 +70,10 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param int $id
+     * @return JsonResponse
      */
-    public function show(int $id): \Illuminate\Http\JsonResponse
+    public function show(int $id): JsonResponse
     {
         try {
             $validator = $this->productValidator->validateId($id);
@@ -75,6 +83,8 @@ class ProductController extends Controller
             }
         } catch (ProductValidatorException $e) {
             return response()->json(null,400);
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
         } catch (Exception $e) {
             return response()->json(null, 500);
         }
@@ -83,10 +93,10 @@ class ProductController extends Controller
     }
 
     /**
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param int $id
+     * @return JsonResponse
      */
-    public function order(int $id): \Illuminate\Http\JsonResponse
+    public function order(int $id): JsonResponse
     {
         try {
             $validator = $this->productValidator->validateId($id);
@@ -96,6 +106,8 @@ class ProductController extends Controller
             }
         } catch (ProductValidatorException $e) {
             return response()->json(null,400);
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
         } catch (Exception $e) {
             return response()->json(null, 500);
         }
@@ -104,11 +116,11 @@ class ProductController extends Controller
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         try {
 
@@ -116,9 +128,14 @@ class ProductController extends Controller
 
             if ($validatorId) {
                 $product = $this->productRepository->update($id, $request);
+                $categories = $this->categoryRepository->findMany($request['categories']);
+
+                $product->categories()->attach($categories);
             }
         } catch (ProductValidatorException $e) {
             return response()->json($e->getMessage(),400);
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
         } catch (Exception $e) {
             return response()->json($e->getMessage(), 500);
         }
@@ -127,10 +144,10 @@ class ProductController extends Controller
     }
 
     /**
-     * @param  \App\Models\Product $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param int $id
+     * @return JsonResponse
      */
-    public function destroy(int $id): \Illuminate\Http\JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         try {
             $validatorId = $this->productValidator->validateId($id);
@@ -140,6 +157,8 @@ class ProductController extends Controller
             }
         }catch (ProductValidatorException $e) {
             return response()->json($e->getMessage(),400);
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
         } catch (Exception $e) {
             return response()->json($e->getMessage(), 500);
         }

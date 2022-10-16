@@ -2,14 +2,11 @@
 
 namespace App\Validator;
 
-use App\Exceptions\ProductValidatorException;
+use App\Exceptions\CategoryValidatorException;
 use Illuminate\Support\Facades\Validator;
 
-class ProductValidator
+class CategoryValidator
 {
-    /**
-     * @var Validator
-     */
     private $validator;
 
     public function __construct(Validator $validator) {
@@ -17,37 +14,31 @@ class ProductValidator
     }
 
     /**
-     * @param $request
-     * @return bool
-     * @throws ProductValidatorException
+     * @throws CategoryValidatorException
      */
-    public function nameCategoryCompanyAMountPriceRequired($request): bool
+    public function categoryNameAndDescriptionRequired($request): bool
     {
         $validator = $this->validator::make($request->all(),
             [
                 'name' => 'required',
-                'company' => 'required',
-                'amount' => 'required',
-                'price'=> 'required',
+                'description' => 'required',
             ]
         );
 
         if ($validator->fails()) {
-            throw new ProductValidatorException();
+            throw new CategoryValidatorException();
         }
 
         return  true;
     }
 
     /**
-     * @param $id
-     * @return bool
-     * @throws ProductValidatorException
+     * @throws CategoryValidatorException
      */
     public function validateId($id): bool
     {
         if (!is_numeric($id) && is_null($id)) {
-            throw new ProductValidatorException();
+            throw new CategoryValidatorException();
         }
 
         return true;

@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\AlertValidatorException;
-use App\Models\Alert;
-use App\Http\Controllers\AlertInterface;
+use App\Exceptions\NotFoundException;
 use App\Validator\AlertValidator;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class AlertController extends Controller
 {
@@ -24,7 +22,7 @@ class AlertController extends Controller
 
     public function __construct(AlertInterface $alertRepository, AlertValidator $alertValidator)
     {
-       // $this->middleware('auth:api');
+        $this->middleware('auth:api');
         $this->alertRepository = $alertRepository;
         $this->alertValidator = $alertValidator;
     }
@@ -32,7 +30,7 @@ class AlertController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         $alerts = $this->alertRepository->getAll();
 
@@ -43,7 +41,7 @@ class AlertController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
             $validator = $this->alertValidator->productIdAndNameRequired($request);
@@ -61,19 +59,22 @@ class AlertController extends Controller
     }
 
     /**
-     * @param  \App\Models\Alert $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id)
+    public function show(int $id): \Illuminate\Http\JsonResponse
     {
         try {
+
             $validator = $this->alertValidator->validateId($id);
 
             if ($validator) {
                 $alert = $this->alertRepository->productNameJoinToAlertById($id);
             }
         } catch (AlertValidatorException $e) {
-            return response()->json(null,400);
+            return response()->json(null, 400);
+        } catch (NotFoundException $e) {
+            return response()->json(null, 404);
         } catch (Exception $e) {
             return response()->json(null, 500);
         }
@@ -86,7 +87,7 @@ class AlertController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
         try {
 
@@ -97,10 +98,13 @@ class AlertController extends Controller
             }
 
         } catch (AlertValidatorException $e) {
-            return response()->json($e->getMessage(),400);
+            return response()->json(null, 400);
+        } catch (NotFoundException $e) {
+            return response()->json(null, 404);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
+
         return response()->json($alert, 200);
     }
 
@@ -110,19 +114,22 @@ class AlertController extends Controller
      * @param  \App\Models\Alert $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(int $id)
+    public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
         try {
             $validatorId = $this->alertValidator->validateId($id);
 
             if ($validatorId) {
-                $alert = $this->alertRepository->destroy($id);
+                $this->alertRepository->destroy($id);
             }
-        }catch (AlertValidatorException $e) {
-            return response()->json($e->getMessage(),400);
+        } catch (AlertValidatorException $e) {
+            return response()->json(null, 400);
+        } catch (NotFoundException $e) {
+            return response()->json(null, 404);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(null, 500);
         }
+
         return response()->json(null, 200);
     }
 }

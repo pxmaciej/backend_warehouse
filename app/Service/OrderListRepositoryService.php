@@ -2,9 +2,7 @@
 
 namespace App\Service;
 
-use App\Exceptions\OrderListValidatorException;
-use App\Exceptions\OrderValidatorException;
-use App\Exceptions\ProductValidatorException;
+use App\Exceptions\NotFoundException;
 use App\Http\Controllers\OrderListInterface;
 use App\Models\Order;
 use App\Models\OrderList;
@@ -18,7 +16,7 @@ class OrderListRepositoryService implements OrderListInterface
     }
 
     /**
-     * @throws OrderListValidatorException
+     * @throws NotFoundException
      */
     public function setData($request)
     {
@@ -34,7 +32,7 @@ class OrderListRepositoryService implements OrderListInterface
     }
 
     /**
-     * @throws OrderListValidatorException
+     * @throws NotFoundException
      */
     public function show($id)
     {
@@ -48,7 +46,7 @@ class OrderListRepositoryService implements OrderListInterface
     }
 
     /**
-     * @throws OrderListValidatorException
+     * @throws NotFoundException
      */
     public function destroy($id)
     {
@@ -61,7 +59,7 @@ class OrderListRepositoryService implements OrderListInterface
     }
 
     /**
-     * @throws OrderListValidatorException
+     * @throws NotFoundException
      */
     public function update($id, $request)
     {
@@ -79,43 +77,46 @@ class OrderListRepositoryService implements OrderListInterface
     {
         return OrderList::join('products', 'products.id', '=', 'order_lists.product_id')
             ->join('orders', 'orders.id', '=', 'order_lists.order_id')
-            ->select('order_lists.*', 'products.name', 'orders.NameBuyer')
+            ->select('order_lists.*', 'products.name', 'orders.nameBuyer')
             ->where('order_lists.order_id', $id)
             ->get();
     }
 
 
     /**
-     * @throws OrderListValidatorException
+     * @throws NotFoundException
      */
     public function checkOrderListIdExist($id): bool
     {
         $product = OrderList::find($id);
         if ($product === null) {
-            throw new OrderListValidatorException();
+            throw new NotFoundException();
         }
 
         return true;
     }
 
     /**
-     * @throws OrderListValidatorException
+     * @throws NotFoundException
      */
     public function checkProductIdExist($id): bool
     {
         $product = Product::find($id);
         if ($product === null) {
-            throw new OrderListValidatorException();
+            throw new NotFoundException();
         }
 
         return true;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function checkOrderIdExist($id): bool
     {
         $product = Order::find($id);
         if ($product === null) {
-            throw new OrderListValidatorException();
+            throw new NotFoundException();
         }
 
         return true;

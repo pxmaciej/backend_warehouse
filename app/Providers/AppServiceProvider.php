@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Http\Controllers\AlertInterface;
+use App\Http\Controllers\CategoryInterface;
 use App\Http\Controllers\OrderInterface;
 use App\Http\Controllers\OrderListInterface;
 use App\Http\Controllers\ProductInterface;
 use App\Http\Controllers\StatisticInterface;
+use App\Service\CategoryRepositoryService;
 use App\Service\OrderListRepositoryService;
 use App\Service\OrderRepositoryService;
 use App\Service\ProductRepositoryService;
@@ -37,6 +39,9 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->bind(StatisticInterface::class, function () {
             return new StatisticRepositoryService();
+        });
+        $this->app->bind(CategoryInterface::class, function () {
+            return new CategoryRepositoryService();
         });
     }
 

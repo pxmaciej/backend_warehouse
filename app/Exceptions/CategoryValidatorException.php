@@ -4,6 +4,6 @@ namespace App\Exceptions;
 
 use Exception;
 
-class AlertValidatorException extends Exception
+class CategoryValidatorException extends Exception
 {
 }

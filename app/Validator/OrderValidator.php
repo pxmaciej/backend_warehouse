@@ -23,7 +23,9 @@ class OrderValidator
     {
         $validator = $this->validator::make($request->all(),
             [
-                'nameBuyer' => 'required|string',
+                'nameBuyer' => 'required',
+                'address' => 'required',
+                'status' => 'required',
                 'dateOrder' => 'required',
                 'dateDeliver' => 'required',
             ]

@@ -23,7 +23,7 @@ Route::group([
     Route::get('users', [App\Http\Controllers\AuthController::class, 'allUserProfile'])->middleware('roles:admin');
     Route::post('login', [App\Http\Controllers\AuthController::class, 'login']);
     Route::post('checkToken', [App\Http\Controllers\AuthController::class, 'checkToken']);
-    Route::post('register', [App\Http\Controllers\AuthController::class, 'register'])->middleware('roles:admin');
+    Route::post('register', [App\Http\Controllers\AuthController::class, 'register']);
     Route::post('update', [App\Http\Controllers\AuthController::class, 'update']);
     Route::post('logout', [App\Http\Controllers\AuthController::class, 'logout']);
     Route::post('refresh', [App\Http\Controllers\AuthController::class, 'refresh']);
@@ -34,7 +34,7 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'product'
+    'prefix' => 'products'
 
 ], function ($router) {
 
@@ -49,7 +49,7 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'order'
+    'prefix' => 'orders'
 
 ], function ($router) {
 
@@ -64,7 +64,7 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'orderlist'
+    'prefix' => 'orderlists'
 
 ], function ($router) {
 
@@ -79,7 +79,7 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'statistic'
+    'prefix' => 'statistics'
 
 ], function ($router) {
 
@@ -93,7 +93,7 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'alert'
+    'prefix' => 'alerts'
 
 ], function ($router) {
 
@@ -102,4 +102,18 @@ Route::group([
     Route::get('show/{id}', [App\Http\Controllers\AlertController::class, 'show'])->middleware('roles:admin');
     Route::patch('update/{id}', [App\Http\Controllers\AlertController::class, 'update'])->middleware('roles:admin');
     Route::delete('destroy/{id}', [App\Http\Controllers\AlertController::class, 'destroy'])->middleware('roles:admin');
+});
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'categories'
+
+], function ($router) {
+
+    Route::get('index', [App\Http\Controllers\CategoryController::class, 'index']);
+    Route::post('store', [App\Http\Controllers\CategoryController::class, 'store'])->middleware('roles:admin');
+    Route::get('show/{id}', [App\Http\Controllers\CategoryController::class, 'show'])->middleware('roles:admin');
+    Route::patch('update/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->middleware('roles:admin');
+    Route::delete('destroy/{id}', [App\Http\Controllers\CategoryController::class, 'destroy'])->middleware('roles:admin');
 });

@@ -3,7 +3,7 @@
 namespace App\Service;
 
 
-use App\Exceptions\StatisticValidatorException;
+use App\Exceptions\NotFoundException;
 use App\Http\Controllers\StatisticInterface;
 use App\Models\Product;
 use App\Models\Statistic;
@@ -16,7 +16,7 @@ class StatisticRepositoryService implements StatisticInterface
     }
 
     /**
-     * @throws StatisticValidatorException
+     * @throws NotFoundException
      */
     public function setData($request)
     {
@@ -30,6 +30,9 @@ class StatisticRepositoryService implements StatisticInterface
         ]);
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function show($id)
     {
         $this->checkStatisticIdExist($id);
@@ -40,7 +43,10 @@ class StatisticRepositoryService implements StatisticInterface
             ->get();
     }
 
-    public function destroy($id): bool
+    /**
+     * @throws NotFoundException
+     */
+    public function destroy($id)
     {
         $this->checkStatisticIdExist($id);
 
@@ -51,7 +57,7 @@ class StatisticRepositoryService implements StatisticInterface
     }
 
     /**
-     * @throws StatisticValidatorException
+     * @throws NotFoundException
      */
     public function update($id, $request)
     {
@@ -67,26 +73,26 @@ class StatisticRepositoryService implements StatisticInterface
     }
 
     /**
-     * @throws StatisticValidatorException
+     * @throws NotFoundException
      */
     public function checkProductIdExist($product_id): bool
     {
         $product = Product::find($product_id);
         if ($product === null) {
-            throw new StatisticValidatorException();
+            throw new NotFoundException();
         }
 
         return true;
     }
 
     /**
-     * @throws StatisticValidatorException
+     * @throws NotFoundException
      */
     public function checkStatisticIdExist($id): bool
     {
         $product = Statistic::find($id);
         if ($product === null) {
-            throw new StatisticValidatorException();
+            throw new NotFoundException();
         }
 
         return true;

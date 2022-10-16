@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\NotFoundException;
 use App\Exceptions\OrderListValidatorException;
 use App\Validator\OrderListValidator;
 use Exception;
@@ -58,7 +59,7 @@ class OrderListController extends Controller
     }
 
     /**
-     * @param  \App\Models\OrderList $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(int $id): \Illuminate\Http\JsonResponse
@@ -71,6 +72,8 @@ class OrderListController extends Controller
             }
         } catch (OrderListValidatorException $e) {
             return response()->json(null,400);
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
         } catch (Exception $e) {
             return response()->json(null, 500);
         }
@@ -79,7 +82,7 @@ class OrderListController extends Controller
     }
 
     /**
-     * @param  \App\Models\OrderList $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function order(int $id): \Illuminate\Http\JsonResponse
@@ -92,6 +95,8 @@ class OrderListController extends Controller
             }
         } catch (OrderListValidatorException $e) {
             return response()->json(null,400);
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
         } catch (Exception $e) {
             return response()->json(null, 500);
         }
@@ -101,7 +106,7 @@ class OrderListController extends Controller
 
     /**
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\OrderList $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
@@ -116,6 +121,8 @@ class OrderListController extends Controller
 
         } catch (OrderListValidatorException $e) {
             return response()->json($e->getMessage(),400);
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
         } catch (Exception $e) {
             return response()->json($e->getMessage(), 500);
         }
@@ -139,6 +146,8 @@ class OrderListController extends Controller
             }
         }catch (OrderListValidatorException $e) {
             return response()->json($e->getMessage(),400);
+        } catch (NotFoundException $e) {
+            return response()->json(null,404);
         } catch (Exception $e) {
             return response()->json($e->getMessage(), 500);
         }

@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Exceptions\OrderValidatorException;
+use App\Exceptions\NotFoundException;
 use App\Http\Controllers\OrderInterface;
 use App\Models\Order;
 
@@ -17,21 +17,26 @@ class OrderRepositoryService implements OrderInterface
     {
         return Order::create([
             'nameBuyer' => $request->nameBuyer,
+            'address' => $request->address,
+            'status' => $request->status,
             'dateOrder'=> $request->dateOrder,
             'dateDeliver' => $request->dateDeliver,
         ]);
     }
 
     /**
-     * @throws OrderValidatorException
+     * @throws NotFoundException
      */
     public function show($id)
     {
         $this->checkOrderIdExist($id);
 
-        return Order::where('id', $id)->get();
+        return Order::find($id)->get();
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function destroy($id)
     {
         $this->checkOrderIdExist($id);
@@ -44,7 +49,7 @@ class OrderRepositoryService implements OrderInterface
     }
 
     /**
-     * @throws OrderValidatorException
+     * @throws NotFoundException
      */
     public function update($id, $request)
     {
@@ -56,20 +61,26 @@ class OrderRepositoryService implements OrderInterface
         return $order;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function showOrderByIdRelationToProduct($id)
     {
+        $this->checkOrderIdExist($id);
+
         return Order::find($id)->products()->get();
     }
 
 
     /**
-     * @throws OrderValidatorException
+     * @throws NotFoundException
      */
     public function checkOrderIdExist($id): bool
     {
-        $product = Order::find($id);
-        if ($product === null) {
-            throw new OrderValidatorException();
+        $order = Order::find($id);
+
+        if ($order === null) {
+            throw new NotFoundException();
         }
 
         return true;

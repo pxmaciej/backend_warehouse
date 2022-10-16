@@ -1,0 +1,887 @@
+{
+	"info": {
+		"_postman_id": "b7a11176-e993-42dc-9ed1-c25593dbea2f",
+		"name": "Warehouse",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Alert",
+			"item": [
+				{
+					"name": "Index Alert",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/alert/index",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"alert",
+								"index"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Alert",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/alert/show/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"alert",
+								"show",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Alert",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Alert",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/alert/store",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"alert",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Alert",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Alert1212",
+									"type": "text"
+								},
+								{
+									"key": "id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/alert/update",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"alert",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "user@user1",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "zaq1@WSX",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "role",
+									"value": "user",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "zaq1@WSX",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "zaq1@WSX",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "user1",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "user@user1",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "667745091",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/auth/users",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nameBuyer",
+									"value": "Tomek",
+									"type": "text"
+								},
+								{
+									"key": "dateOrder",
+									"value": "2021-12-08 18:05:03",
+									"type": "text"
+								},
+								{
+									"key": "dateDeliver",
+									"value": "2021-12-08 18:05:03",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/order/store",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"order",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Index Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/order/index",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"order",
+								"index"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Order by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/order/show/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"order",
+								"show",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Order by id with relation to Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/order/product/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"order",
+								"product",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OrderList",
+			"item": [
+				{
+					"name": "Index Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orderlist/index",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orderlist",
+								"index"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order List",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "order_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "200.50",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orderlist/store",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orderlist",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Order List by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "order_id",
+								"value": "1",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orderlist/show/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orderlist",
+								"show",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Order List by order_id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "order_id",
+								"value": "1",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orderlist/order/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orderlist",
+								"order",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "dysk",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "komputery",
+									"type": "text"
+								},
+								{
+									"key": "company",
+									"value": "SATA",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "200",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "300.25",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/product/store",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"product",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Index Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/product/index",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"product",
+								"index"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id_product",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Firolka",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "firany",
+									"type": "text"
+								},
+								{
+									"key": "company",
+									"value": "Lora",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "10.99",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/product/update",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"product",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Product by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/product/show/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"product",
+								"show",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Product by id and relations with Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/product/order/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"product",
+								"order",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Statistic",
+			"item": [
+				{
+					"name": "Index Statistic",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/statistic/index",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"statistic",
+								"index"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Statistic",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "statistic1",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "200",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "200.50",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/statistic/store",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"statistic",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Statistic",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/statistic/show/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"statistic",
+								"show",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Statistic",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "product_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "10.99",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "statistic",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/statistic/update",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"statistic",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

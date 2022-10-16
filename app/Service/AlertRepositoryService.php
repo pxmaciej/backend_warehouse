@@ -3,10 +3,10 @@
 namespace App\Service;
 
 use App\Exceptions\AlertValidatorException;
+use App\Exceptions\NotFoundException;
 use App\Http\Controllers\AlertInterface;
 use App\Models\Alert;
 use App\Models\Product;
-use Illuminate\Http\Request;
 
 class AlertRepositoryService implements AlertInterface
 {
@@ -16,7 +16,7 @@ class AlertRepositoryService implements AlertInterface
     }
 
     /**
-     * @throws AlertValidatorException
+     * @throws NotFoundException
      */
     public function setData($request)
     {
@@ -30,8 +30,13 @@ class AlertRepositoryService implements AlertInterface
         );
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function productNameJoinToAlertById($id)
     {
+        $this->checkAlertIdExist($id);
+
         return Alert::join('products', 'products.id', '=', 'alerts.product_id')
             ->select('products.name as product_name','alerts.*')
             ->where('alerts.id', $id)
@@ -39,9 +44,9 @@ class AlertRepositoryService implements AlertInterface
     }
 
     /**
-     * @throws AlertValidatorException
+     * @throws NotFoundException
      */
-    public function destroy($id)
+    public function destroy($id): bool
     {
         $this->checkAlertIdExist($id);
 
@@ -53,6 +58,7 @@ class AlertRepositoryService implements AlertInterface
 
     /**
      * @throws AlertValidatorException
+     * @throws NotFoundException
      */
     public function update($id, $request)
     {
@@ -66,29 +72,28 @@ class AlertRepositoryService implements AlertInterface
     }
 
     /**
-     * @throws AlertValidatorException
+     * @throws NotFoundException
      */
     public function checkProductIdExist($id): bool
     {
         $product = Product::find($id);
         if ($product === null) {
-            throw new AlertValidatorException();
+            throw new NotFoundException();
         }
 
         return true;
     }
 
     /**
-     * @throws AlertValidatorException
+     * @throws NotFoundException
      */
     public function checkAlertIdExist($id): bool
     {
         $product = Alert::find($id);
         if ($product === null) {
-            throw new AlertValidatorException();
+            throw new NotFoundException();
         }
 
         return true;
     }
-
 }
