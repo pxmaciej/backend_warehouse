@@ -23,14 +23,18 @@ class ProductController extends Controller
 
     private $categoryRepository;
 
-    public function __construct(ProductInterface $productRepository, ProductValidator $productValidator, CategoryInterface $categoryRepository)
-    {
+    public function __construct(
+        ProductInterface $productRepository,
+        ProductValidator $productValidator,
+        CategoryInterface $categoryRepository
+    ) {
         $this->middleware('auth:api');
 
         $this->productRepository = $productRepository;
         $this->productValidator = $productValidator;
         $this->categoryRepository = $categoryRepository;
     }
+
     /**
      * @return JsonResponse
      */
@@ -60,7 +64,7 @@ class ProductController extends Controller
         } catch (ProductValidatorException $e) {
             return response()->json(null,400);
         } catch (Exception $e) {
-            return response()->json(null, 500);
+            return response()->json($e->getMessage(), 500);
         }
 
         return response()->json($product, 200);
@@ -153,7 +157,7 @@ class ProductController extends Controller
             $validatorId = $this->productValidator->validateId($id);
 
             if ($validatorId) {
-                $product = $this->productRepository->destroy($id);
+                $this->productRepository->destroy($id);
             }
         }catch (ProductValidatorException $e) {
             return response()->json(null,400);

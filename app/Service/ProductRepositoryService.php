@@ -44,7 +44,7 @@ class ProductRepositoryService implements ProductInterface
 
         $product = Product::find($id);
         $product->orders()->detach();
-        $product->categproes()->detach();
+        $product->categories()->detach();
         $product->delete();
 
         return true;
