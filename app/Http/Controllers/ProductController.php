@@ -132,7 +132,7 @@ class ProductController extends Controller
 
             if ($validatorId) {
                 $product = $this->productRepository->update($id, $request);
-                $ids = $this->categoryRepository->selectCategoriesIds($request['categories']);
+                $ids[] = $this->categoryRepository->selectCategoriesIds($request['categories']);
                 $categories = $this->categoryRepository->findMany($ids);
 
                 $product->categories()->detach($categories);

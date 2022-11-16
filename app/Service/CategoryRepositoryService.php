@@ -39,15 +39,17 @@ class CategoryRepositoryService implements CategoryInterface
         return Category::findMany($ids);
     }
 
-    public function selectCategoriesIds($categories): array
+    public function selectCategoriesIds($categories)
     {
+        if (is_array($categories)) {
             foreach ($categories as $category) {
-
                 $ids[] = $category['id'];
             }
 
-
             return $ids;
+        }
+
+            return $categories;
     }
 
     /**
