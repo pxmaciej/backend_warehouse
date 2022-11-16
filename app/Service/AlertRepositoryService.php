@@ -17,10 +17,12 @@ class AlertRepositoryService implements AlertInterface
 
     /**
      * @throws NotFoundException
+     * @throws \Exception
      */
     public function setData($request)
     {
         $this->checkProductIdExist($request->product_id);
+        $this->checkDuplicateProductId($request->product_id);
 
         return Alert::create(
             [
@@ -79,6 +81,22 @@ class AlertRepositoryService implements AlertInterface
         $product = Product::find($id);
         if ($product === null) {
             throw new NotFoundException();
+        }
+
+        return true;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function checkDuplicateProductId($id): bool
+    {
+        $alerts = Alert::all();
+
+        foreach ($alerts as $alert) {
+            if ($alert->product_id === $id) {
+                throw new \Exception();
+            }
         }
 
         return true;

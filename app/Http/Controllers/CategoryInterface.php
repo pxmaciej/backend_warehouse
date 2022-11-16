@@ -15,4 +15,7 @@ interface CategoryInterface
     public function update($id, $request);
 
     public function findMany($ids);
+
+    public function selectCategoriesIds($categories);
+
 }

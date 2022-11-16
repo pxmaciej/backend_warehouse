@@ -6,7 +6,7 @@ use App\Exceptions\CategoryValidatorException;
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\CategoryInterface;
 use App\Models\Category;
-use function PHPUnit\Framework\isEmpty;
+
 
 class CategoryRepositoryService implements CategoryInterface
 {
@@ -37,6 +37,17 @@ class CategoryRepositoryService implements CategoryInterface
     public function findMany($ids)
     {
         return Category::findMany($ids);
+    }
+
+    public function selectCategoriesIds($categories): array
+    {
+            foreach ($categories as $category) {
+
+                $ids[] = $category['id'];
+            }
+
+
+            return $ids;
     }
 
     /**

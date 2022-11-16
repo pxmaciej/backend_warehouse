@@ -14,4 +14,9 @@ class Alert extends Model
         'product_id',
         'name',
     ];
+
+    public function product()
+    {
+        $this->belongsTo(Product::class);
+    }
 }

@@ -132,7 +132,10 @@ class ProductController extends Controller
 
             if ($validatorId) {
                 $product = $this->productRepository->update($id, $request);
-                $categories = $this->categoryRepository->findMany($request['categories']);
+                $ids = $this->categoryRepository->selectCategoriesIds($request['categories']);
+                $categories = $this->categoryRepository->findMany($ids);
+
+                $product->categories()->detach($categories);
 
                 $product->categories()->attach($categories);
             }
@@ -141,7 +144,7 @@ class ProductController extends Controller
         } catch (NotFoundException $e) {
             return response()->json(null,404);
         } catch (Exception $e) {
-            return response()->json(null, 500);
+            return response()->json($e->getMessage(), 500);
         }
 
         return response()->json($product, 200);

@@ -19,4 +19,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Category::class, 'categories_products');
     }
+
+    public function alert()
+    {
+        return $this->hasOne(Alert::class);
+    }
 }
