@@ -7,6 +7,7 @@ use App\Exceptions\NotFoundException;
 use App\Validator\AlertValidator;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class AlertController extends Controller
 {
@@ -131,5 +132,23 @@ class AlertController extends Controller
         }
 
         return response()->json(null, 200);
+    }
+
+    public function setLimit(int $limit): \Illuminate\Http\JsonResponse
+    {
+
+        config(['limit-alert.LIMIT' => $limit]);
+        $text = '<?php return ' . var_export(config('limit-alert'), true) . ';';
+        file_put_contents(config_path('limit-alert.php'), $text);
+
+
+        return response()->json($limit);
+    }
+
+    public function getLimit(): \Illuminate\Http\JsonResponse
+    {
+        $limit = config('limit-alert.LIMIT');
+
+        return response()->json($limit);
     }
 }

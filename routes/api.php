@@ -98,10 +98,12 @@ Route::group([
 ], function ($router) {
 
     Route::get('index', [App\Http\Controllers\AlertController::class, 'index']);
-    Route::post('store', [App\Http\Controllers\AlertController::class, 'store'])->middleware('roles:admin');
+    Route::post('store', [App\Http\Controllers\AlertController::class, 'store']);
     Route::get('show/{id}', [App\Http\Controllers\AlertController::class, 'show'])->middleware('roles:admin');
     Route::patch('update/{id}', [App\Http\Controllers\AlertController::class, 'update'])->middleware('roles:admin');
     Route::delete('destroy/{id}', [App\Http\Controllers\AlertController::class, 'destroy'])->middleware('roles:admin');
+    Route::get('limit/{limit}', [App\Http\Controllers\AlertController::class, 'setLimit'])->middleware('roles:admin');
+    Route::get('limit', [App\Http\Controllers\AlertController::class, 'getLimit']);
 });
 
 Route::group([

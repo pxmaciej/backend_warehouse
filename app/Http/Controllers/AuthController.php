@@ -24,7 +24,7 @@ class AuthController extends Controller
      */
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
-            'userName' => 'required',
+            'login' => 'required',
             'password' => 'required|string|min:6',
         ]);
 
@@ -48,7 +48,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'role' => 'string',
-            'userName' => 'required|string|max:100|unique:users',
+            'login' => 'required|string|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
         ]);
 
@@ -110,7 +110,7 @@ class AuthController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\auth  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request)
     {
@@ -119,7 +119,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'string|between:2,100',
             'role' => 'string',
-            'email' => 'string|email|max:100',
+            'login' => 'string|email|max:100',
             'password' => 'string|confirmed|min:6',
         ]);
         if ($validator->fails()) {
@@ -128,12 +128,12 @@ class AuthController extends Controller
         }
             $name = $request->name;
             $role = $request->role;
-            $email = $request->email;
+            $login = $request->login;
             $password = $request->password;
 
             $edited->name = $name;
             $edited->role = $role;
-            $edited->email = $email;
+            $edited->login = $login;
             $edited->password = bcrypt($password);
             $edited->save();
 
@@ -166,7 +166,7 @@ class AuthController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\auth  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($user_id)
     {
