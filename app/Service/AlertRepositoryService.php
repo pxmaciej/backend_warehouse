@@ -12,7 +12,9 @@ class AlertRepositoryService implements AlertInterface
 {
     public function getAll()
     {
-        return Alert::get();
+        return Alert::join('products', 'products.id', '=', 'alerts.product_id')
+            ->select('products.name as product_name','alerts.*')
+            ->get();
     }
 
     /**

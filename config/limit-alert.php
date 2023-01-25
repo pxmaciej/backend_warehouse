@@ -1,3 +1,3 @@
 <?php return array (
-  'LIMIT' => 180,
+  'LIMIT' => 50,
 );

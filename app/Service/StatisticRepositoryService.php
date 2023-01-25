@@ -12,7 +12,9 @@ class StatisticRepositoryService implements StatisticInterface
 {
     public function getAll()
     {
-        return Statistic::get();
+        return Statistic::join('products', 'products.id', '=', 'statistics.product_id')
+            ->select('products.name as product_name','statistics.*')
+            ->get();
     }
 
     /**

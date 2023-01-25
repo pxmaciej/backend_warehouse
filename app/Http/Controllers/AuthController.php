@@ -48,6 +48,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'role' => 'string',
+            'phone' => 'required|digits_between:10,19',
             'login' => 'required|string|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
         ]);
@@ -114,12 +115,12 @@ class AuthController extends Controller
      */
     public function update(Request $request)
     {
-        $edited = User::find($request->user_id);
+        $edited = User::find($request->id);
 
         $validator = Validator::make($request->all(), [
             'name' => 'string|between:2,100',
             'role' => 'string',
-            'login' => 'string|email|max:100',
+            'login' => 'string|max:100',
             'password' => 'string|confirmed|min:6',
         ]);
         if ($validator->fails()) {
@@ -128,12 +129,14 @@ class AuthController extends Controller
         }
             $name = $request->name;
             $role = $request->role;
+            $phone = $request->phone;
             $login = $request->login;
             $password = $request->password;
 
             $edited->name = $name;
             $edited->role = $role;
             $edited->login = $login;
+            $edited->phone = $phone;
             $edited->password = bcrypt($password);
             $edited->save();
 
