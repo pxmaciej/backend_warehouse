@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Exceptions\AlertValidatorException;
+use App\Exceptions\DuplicateException;
 use App\Exceptions\NotFoundException;
 use App\Http\Controllers\AlertInterface;
 use App\Models\Alert;
@@ -89,7 +90,7 @@ class AlertRepositoryService implements AlertInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws DuplicateException
      */
     public function checkDuplicateProductId($id): bool
     {
@@ -97,7 +98,7 @@ class AlertRepositoryService implements AlertInterface
 
         foreach ($alerts as $alert) {
             if ($alert->product_id === $id) {
-                throw new \Exception();
+                throw new DuplicateException();
             }
         }
 

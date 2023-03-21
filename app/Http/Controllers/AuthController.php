@@ -15,7 +15,7 @@ class AuthController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login']]);
     }
 
     /**
@@ -140,13 +140,9 @@ class AuthController extends Controller
             $edited->password = bcrypt($password);
             $edited->save();
 
-        return response()->json([
-            'message' => 'User successfully updated',
-            'user' => $edited
-        ], 200);
+        return response()->json($edited);
     }
     /**
-     * Get the token array structure.
      *
      * @param  string $token
      *
@@ -166,7 +162,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
      *
      * @param  \App\Models\auth  $request
      * @return \Illuminate\Http\JsonResponse

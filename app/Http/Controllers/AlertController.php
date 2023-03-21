@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\AlertValidatorException;
+use App\Exceptions\DuplicateException;
 use App\Exceptions\NotFoundException;
 use App\Validator\AlertValidator;
 use Exception;
@@ -52,8 +53,10 @@ class AlertController extends Controller
             }
         } catch (AlertValidatorException $e) {
             return response()->json(null,400);
+        } catch (DuplicateException $e) {
+            return response()->json(null, 422);
         } catch (Exception $e) {
-            return response()->json(null, 500);
+            return response()->json($e->getMessage(), 500);
         }
 
         return response()->json($alerts, 200);
