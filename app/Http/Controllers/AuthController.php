@@ -6,22 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Spatie\Activitylog\Models\Activity;
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
-    /**
-     * Get a JWT via given credentials.
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
             'login' => 'required',
@@ -39,11 +31,6 @@ class AuthController extends Controller
         return $this->createNewToken($token);
     }
 
-    /**
-     * Register a User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function register(Request $request) {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
@@ -68,51 +55,25 @@ class AuthController extends Controller
         ], 201);
     }
 
-   /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function logout() {
         auth()->logout();
 
         return response()->json(['message' => 'User successfully signed out']);
     }
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function refresh() {
         return $this->createNewToken(auth()->refresh());
     }
 
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function userProfile() {
         return response()->json(auth()->user());
     }
 
-    /**
-     * Get the all user profile.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function allUserProfile() {
         $users = User::all()->except(Auth::id());
         return response()->json($users);
     }
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\auth  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function update(Request $request)
     {
         $edited = User::find($request->id);
@@ -142,12 +103,7 @@ class AuthController extends Controller
 
         return response()->json($edited);
     }
-    /**
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     protected function createNewToken($token){
         return response()->json([
             'access_token' => $token,
@@ -161,15 +117,15 @@ class AuthController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    /**
-     *
-     * @param  \App\Models\auth  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function destroy($user_id)
     {
         $destroy = User::find($user_id);
         $destroy->delete();
         return response()->json(['200' => 'success']);
+    }
+
+    public function logs()
+    {
+        return Activity::all();
     }
 }

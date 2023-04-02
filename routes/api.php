@@ -19,7 +19,6 @@ Route::group([
     'prefix' => 'auth'
 
 ], function ($router) {
-
     Route::get('users', [App\Http\Controllers\AuthController::class, 'allUserProfile'])->middleware('roles:admin');
     Route::post('login', [App\Http\Controllers\AuthController::class, 'login']);
     Route::post('checkToken', [App\Http\Controllers\AuthController::class, 'checkToken']);
@@ -28,7 +27,8 @@ Route::group([
     Route::get('logout', [App\Http\Controllers\AuthController::class, 'logout']);
     Route::get('refresh', [App\Http\Controllers\AuthController::class, 'refresh']);
     Route::get('profile', [App\Http\Controllers\AuthController::class, 'userProfile']);
-    Route::delete('destroy/{id}', [App\Http\Controllers\AuthController::class, 'destroy'])->middleware('roles:admin');;
+    Route::delete('destroy/{id}', [App\Http\Controllers\AuthController::class, 'destroy'])->middleware('roles:admin');
+    Route::get('log', [App\Http\Controllers\AuthController::class, 'logs'])->middleware('roles:admin');
 });
 
 Route::group([
@@ -37,7 +37,6 @@ Route::group([
     'prefix' => 'products'
 
 ], function ($router) {
-
     Route::get('index', [App\Http\Controllers\ProductController::class, 'index']);
     Route::post('store', [App\Http\Controllers\ProductController::class, 'store']);
     Route::get('show/{id}', [App\Http\Controllers\ProductController::class, 'show']);
@@ -52,7 +51,6 @@ Route::group([
     'prefix' => 'orders'
 
 ], function ($router) {
-
     Route::get('index', [App\Http\Controllers\OrderController::class, 'index']);
     Route::post('store', [App\Http\Controllers\OrderController::class, 'store']);
     Route::get('show/{id}', [App\Http\Controllers\OrderController::class, 'show']);
@@ -67,7 +65,6 @@ Route::group([
     'prefix' => 'orderlists'
 
 ], function ($router) {
-
     Route::get('index', [App\Http\Controllers\OrderListController::class, 'index']);
     Route::post('store', [App\Http\Controllers\OrderListController::class, 'store']);
     Route::get('show/{id}', [App\Http\Controllers\OrderListController::class, 'show']);
@@ -82,7 +79,6 @@ Route::group([
     'prefix' => 'statistics'
 
 ], function ($router) {
-
     Route::get('index', [App\Http\Controllers\StatisticController::class, 'index'])->middleware('roles:admin');
     Route::post('store', [App\Http\Controllers\StatisticController::class, 'store'])->middleware('roles:admin');
     Route::get('show/{id}', [App\Http\Controllers\StatisticController::class, 'show'])->middleware('roles:admin');
@@ -96,7 +92,6 @@ Route::group([
     'prefix' => 'alerts'
 
 ], function ($router) {
-
     Route::get('index', [App\Http\Controllers\AlertController::class, 'index']);
     Route::post('store', [App\Http\Controllers\AlertController::class, 'store']);
     Route::get('show/{id}', [App\Http\Controllers\AlertController::class, 'show'])->middleware('roles:admin');
@@ -112,7 +107,6 @@ Route::group([
     'prefix' => 'categories'
 
 ], function ($router) {
-
     Route::get('index', [App\Http\Controllers\CategoryController::class, 'index']);
     Route::post('store', [App\Http\Controllers\CategoryController::class, 'store'])->middleware('roles:admin');
     Route::get('show/{id}', [App\Http\Controllers\CategoryController::class, 'show'])->middleware('roles:admin');

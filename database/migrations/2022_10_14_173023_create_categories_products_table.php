@@ -14,10 +14,10 @@ class CreateCategoriesProductsTable extends Migration
     public function up()
     {
         Schema::create('categories_products', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('category_id')->unsigned();
-            $table->integer('product_id')->unsigned();
-
+            $table->id();
+            $table->unsignedBigInteger('category_id')->unsigned();
+            $table->unsignedBigInteger('product_id')->unsigned();
+            $table->timestamps();
             $table->foreign('category_id')->references('id')->on('categories');
             $table->foreign('product_id')->references('id')->on('products');
         });
@@ -28,9 +28,8 @@ class CreateCategoriesProductsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('categories_product');
-        Schema::dropIfExists('category_product');
+        Schema::drop('categories_products');
     }
 }
