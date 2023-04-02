@@ -20,7 +20,9 @@ class CreateOrderListsTable extends Migration
             $table->unsignedBigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
             $table->BigInteger('amount');
-            $table->double('price');
+            $table->decimal('netto', 8, 2)->nullable();
+            $table->decimal('brutto', 8, 2)->nullable();
+            $table->text('vat')->nullable();
             $table->timestamps();
         });
     }

@@ -28,7 +28,10 @@ class StatisticRepositoryService implements StatisticInterface
             'product_id' => $request->product_id,
             'name'=> $request->name,
             'amount' => $request->amount,
-            'price' => $request->price,
+            'netto' => $request->netto,
+            'vat' => $request->vat,
+            'brutto' => $request->brutto,
+
         ]);
     }
 

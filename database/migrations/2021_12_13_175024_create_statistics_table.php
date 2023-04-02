@@ -18,7 +18,9 @@ class CreateStatisticsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
             $table->bigInteger('amount')->default(1);
-            $table->double('price');
+            $table->decimal('netto', 8, 2)->nullable();
+            $table->decimal('brutto', 8, 2)->nullable();
+            $table->text('vat')->nullable();
             $table->string('name', 255)->nullable()->default('statistic');
             $table->timestamps();
         });

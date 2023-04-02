@@ -29,7 +29,9 @@ class StatisticValidator
                 'product_id' => 'required',
                 'name' => 'required',
                 'amount' => 'required',
-                'price'=> 'required',
+                'netto'=> 'required',
+                'vat'=> 'required',
+                'brutto'=> 'required'
             ]
         );
 

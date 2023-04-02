@@ -26,7 +26,9 @@ class OrderListValidator
                 'product_id' => 'required',
                 'order_id' => 'required',
                 'amount' => 'required',
-                'price'=> 'required',
+                'netto'=> 'required',
+                'vat'=> 'required',
+                'brutto'=> 'required'
             ]
         );
 

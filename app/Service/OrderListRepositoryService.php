@@ -27,7 +27,9 @@ class OrderListRepositoryService implements OrderListInterface
             'product_id' => $request->product_id,
             'order_id'=> $request->order_id,
             'amount' => $request->amount,
-            'price' => $request->price,
+            'netto' => $request->netto,
+            'vat' => $request->vat,
+            'brutto' => $request->brutto,
         ]);
     }
 

@@ -18,7 +18,9 @@ class CreateProductsTable extends Migration
             $table->text('name');
             $table->text('company');
             $table->integer('amount');
-            $table->double('price');
+            $table->decimal('netto', 8, 2)->nullable();
+            $table->decimal('brutto', 8, 2)->nullable();
+            $table->text('vat')->nullable();
             $table->timestamps();
         });
     }
