@@ -131,12 +131,15 @@ class ProductController extends Controller
             $validatorId = $this->productValidator->validateId($id);
 
             if ($validatorId) {
+                if (isset($request['categories'][0]['id'])) {
+                    $categoryIds = collect($request->categories)->pluck('id');
+                    $categories = $this->categoryRepository->findMany($categoryIds);
+                } else {
+                    $categories = $this->categoryRepository->findMany($request['categories']);
+                }
+
                 $product = $this->productRepository->update($id, $request);
-                $ids[] = $this->categoryRepository->selectCategoriesIds($request['categories']);
-                $categories = $this->categoryRepository->findMany($ids);
-
-                $product->categories()->detach($categories);
-
+                $product->categories()->detach();
                 $product->categories()->attach($categories);
             }
         } catch (ProductValidatorException $e) {

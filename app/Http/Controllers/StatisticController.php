@@ -45,7 +45,7 @@ class StatisticController extends Controller
                 $statistic = $this->statisticRepository->setData($request);
             }
         } catch (StatisticValidatorException $e) {
-            return response()->json(null,400);
+            return response()->json($e->getMessage(),400);
         } catch (Exception $e) {
             return response()->json(null, 500);
         }

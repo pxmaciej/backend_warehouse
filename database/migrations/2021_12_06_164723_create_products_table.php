@@ -17,6 +17,8 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->text('name');
             $table->text('company');
+            $table->text('model');
+            $table->bigInteger('code');
             $table->integer('amount');
             $table->decimal('netto', 8, 2)->nullable();
             $table->decimal('brutto', 8, 2)->nullable();

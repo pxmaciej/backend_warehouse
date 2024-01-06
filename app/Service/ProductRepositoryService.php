@@ -20,6 +20,8 @@ class ProductRepositoryService implements ProductInterface
         return Product::create([
             'name' => $request->name,
             'company' => $request->company,
+            'model' => $request->model,
+            'code' => $request->code,
             'amount' => $request->amount,
             'netto' => $request->netto,
             'vat' => $request->vat,
@@ -61,7 +63,7 @@ class ProductRepositoryService implements ProductInterface
 
         $product = Product::find($id);
 
-        $product->fill($request->only(['name','company', 'amount', 'netto', 'vat', 'brutto']))->save();
+        $product->fill($request->only(['name','company','model','code','amount','netto','vat','brutto']))->save();
 
         return $product;
     }

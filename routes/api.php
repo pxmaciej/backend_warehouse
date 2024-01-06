@@ -34,7 +34,7 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'products'
+    'prefix' => 'product'
 
 ], function ($router) {
     Route::get('index', [App\Http\Controllers\ProductController::class, 'index']);
@@ -48,7 +48,7 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'orders'
+    'prefix' => 'order'
 
 ], function ($router) {
     Route::get('index', [App\Http\Controllers\OrderController::class, 'index']);
@@ -62,7 +62,7 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'orderlists'
+    'prefix' => 'orderlist'
 
 ], function ($router) {
     Route::get('index', [App\Http\Controllers\OrderListController::class, 'index']);
@@ -76,7 +76,7 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'statistics'
+    'prefix' => 'statistic'
 
 ], function ($router) {
     Route::get('index', [App\Http\Controllers\StatisticController::class, 'index'])->middleware('roles:admin');
@@ -89,7 +89,7 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'alerts'
+    'prefix' => 'alert'
 
 ], function ($router) {
     Route::get('index', [App\Http\Controllers\AlertController::class, 'index']);
@@ -104,7 +104,7 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'categories'
+    'prefix' => 'category'
 
 ], function ($router) {
     Route::get('index', [App\Http\Controllers\CategoryController::class, 'index']);

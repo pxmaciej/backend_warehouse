@@ -11,7 +11,17 @@ class Product extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'company',
+        'model',
+        'code',
+        'amount',
+        'netto',
+        'vat',
+        'brutto'
+
+    ];
 
     public function orders()
     {

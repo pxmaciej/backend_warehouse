@@ -27,6 +27,8 @@ class ProductValidator
             [
                 'name' => 'required',
                 'company' => 'required',
+                'model'  => 'required',
+                'code'  => 'required',
                 'amount' => 'required',
                 'netto'=> 'required',
                 'vat'=> 'required',

@@ -11,11 +11,23 @@ class OrderList extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'product_id',
+        'order_id',
+        'amount',
+        'netto',
+        'brutto',
+        'vat'
+        ];
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logOnly(['*']);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }
 
