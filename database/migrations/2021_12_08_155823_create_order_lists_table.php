@@ -19,14 +19,14 @@ class CreateOrderListsTable extends Migration
             $table->foreign('product_id')->references('id')->on('products');
             $table->unsignedBigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
-            $table->BigInteger('amount');
+            $table->BigInteger('amount')->default(1);
             $table->decimal('netto', 8, 2)->nullable();
             $table->decimal('brutto', 8, 2)->nullable();
             $table->text('vat')->nullable();
             $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      *

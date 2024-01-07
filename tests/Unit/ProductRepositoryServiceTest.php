@@ -93,13 +93,13 @@ class ProductRepositoryServiceTest extends TestCase
             $this->assertDeleted('products', ['id' => $product->id]);
     
             // Assert that the product is detached from the category
-            $this->assertDatabaseMissing('category_product', [
+            $this->assertDatabaseMissing('categories_products', [
                 'category_id' => $category->id,
                 'product_id' => $product->id,
             ]);
     
             // Assert that the product is detached from the order
-            $this->assertDatabaseMissing('order_product', [
+            $this->assertDatabaseMissing('order_lists', [
                 'order_id' => $order->id,
                 'product_id' => $product->id,
             ]);
