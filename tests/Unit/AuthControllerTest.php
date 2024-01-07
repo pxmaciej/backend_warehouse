@@ -25,7 +25,7 @@ class AuthControllerTest extends TestCase
     /** @test */
     public function it_logs_in_a_user_with_valid_credentials()
     {
-        $user = User::factory()->create([
+        User::factory()->create([
             'login' => 'testuser',
             'password' => Hash::make('testpassword'),
         ]);
@@ -42,7 +42,7 @@ class AuthControllerTest extends TestCase
     }
 
     /** @test */
-    public function testRegister()
+    public function register()
     {
         $response = $this->postJson('/api/auth/register', [
             'name' => 'John Doe',
@@ -78,7 +78,7 @@ class AuthControllerTest extends TestCase
         $request = Request::create('api/auth/logout', 'GET');
         $request->headers->set('Authorization', 'Bearer ' . $token);
 
-        $response = $this->authController->logout($request);
+        $this->authController->logout($request);
 
         $this->assertNull(auth()->user());
     }
