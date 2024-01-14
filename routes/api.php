@@ -108,8 +108,8 @@ Route::group([
 
 ], function ($router) {
     Route::get('index', [App\Http\Controllers\CategoryController::class, 'index']);
-    Route::post('store', [App\Http\Controllers\CategoryController::class, 'store'])->middleware('roles:admin');
-    Route::get('show/{id}', [App\Http\Controllers\CategoryController::class, 'show'])->middleware('roles:admin');
-    Route::patch('update/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->middleware('roles:admin');
-    Route::delete('destroy/{id}', [App\Http\Controllers\CategoryController::class, 'destroy'])->middleware('roles:admin');
+    Route::post('store', [App\Http\Controllers\CategoryController::class, 'store']);
+    Route::get('show/{id}', [App\Http\Controllers\CategoryController::class, 'show']);
+    Route::patch('update/{id}', [App\Http\Controllers\CategoryController::class, 'update']);
+    Route::delete('destroy/{id}', [App\Http\Controllers\CategoryController::class, 'destroy']);
 });

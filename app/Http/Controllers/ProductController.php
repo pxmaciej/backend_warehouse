@@ -28,7 +28,7 @@ class ProductController extends Controller
         ProductValidator $productValidator,
         CategoryInterface $categoryRepository
     ) {
-        $this->middleware('auth:api');
+       $this->middleware('auth:api');
 
         $this->productRepository = $productRepository;
         $this->productValidator = $productValidator;
