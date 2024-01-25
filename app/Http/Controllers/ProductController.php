@@ -135,9 +135,7 @@ class ProductController extends Controller
                     $categoryIds = collect($request->categories)->pluck('id');
                     $categories = $this->categoryRepository->findMany($categoryIds);
                 } else {
-                    $product = $this->productRepository->show($id);
-                    $productCategoriesIds = collect($product->categories)->plucs('id');
-                    $categories = $this->categoryRepository->findMany($productCategoriesIds);
+                    $categories = $this->categoryRepository->findMany($request->categories);
                 }
 
                 $product = $this->productRepository->update($id, $request);

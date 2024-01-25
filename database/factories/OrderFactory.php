@@ -13,8 +13,11 @@ class OrderFactory extends Factory
     {
         return [
             // Definiuj dane dla modelu Order
-            'nameBuyer' => $this->faker->name,
+            'client' => $this->faker->name,
+            'zipCode' => $this->faker->randomDigit(),
+            'city' => $this->faker->city,
             'address' => $this->faker->address,
+            'type' => $this->faker->randomElement(['dostawa','wysyłka']),
             'status' => $this->faker->randomElement([0,1]),
             'dateOrder' => $this->faker->date,
             'dateDeliver' => $this->faker->date,

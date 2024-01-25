@@ -79,7 +79,7 @@ class OrderListRepositoryService implements OrderListInterface
     {
         return OrderList::join('products', 'products.id', '=', 'order_lists.product_id')
             ->join('orders', 'orders.id', '=', 'order_lists.order_id')
-            ->select('order_lists.*', 'products.name', 'orders.nameBuyer')
+            ->select('order_lists.*', 'products.name', 'orders.client')
             ->where('order_lists.order_id', $id)
             ->get();
     }

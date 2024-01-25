@@ -16,8 +16,11 @@ class OrderRepositoryService implements OrderInterface
     public function setData($request)
     {
         return Order::create([
-            'nameBuyer' => $request->nameBuyer,
+            'client' => $request->client,
+            'zipCode' => $request->zipCode,
+            'city' => $request->city,
             'address' => $request->address,
+            'type' => $request->type,
             'status' => $request->status,
             'dateOrder'=> $request->dateOrder,
             'dateDeliver' => $request->dateDeliver,
@@ -60,7 +63,7 @@ class OrderRepositoryService implements OrderInterface
 
         return $order;
     }
-
+    
     /**
      * @throws NotFoundException
      */

@@ -43,8 +43,11 @@ class OrderRepositoryServiceTest extends TestCase
     {
         // Przygotuj testowe dane
         $requestData = [
-            'nameBuyer' => 'John Doe',
+            'client' => 'John Doe',
+            'zipCode' => '59-220',
+            'city' => 'LongLive',
             'address' => '123 Main St',
+            'type' => 'dostawa',
             'status' => 0,
             'dateOrder' => now(),
             'dateDeliver' => now()->addDays(7),
@@ -60,7 +63,7 @@ class OrderRepositoryServiceTest extends TestCase
 
         // Sprawdź, czy dane zostały poprawnie zapisane w bazie danych
         $this->assertDatabaseHas('orders', [
-            'nameBuyer' => $requestData['nameBuyer'],
+            'client' => $requestData['client'],
             'address' => $requestData['address'],
             'status' => $requestData['status']
         ]);

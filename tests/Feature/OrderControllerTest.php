@@ -30,8 +30,11 @@ class OrderControllerTest extends TestCase
     {
         // Przygotuj dane testowe
         $orderData = [
-            'nameBuyer' => 'Test Order',
+            'client' => 'Test Order',
+            'zipCode' => '59-220',
+            'city' => 'LongLive',
             'address' => 'John Doe',
+            'type' => 'dostawa',
             'status' => true,
             'dateDeliver' => now()->addDays(5)->format('Y-m-d'),
             'dateOrder' => now()->addDays(5)->format('Y-m-d'),

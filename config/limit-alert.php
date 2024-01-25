@@ -1,3 +1,3 @@
 <?php return array (
-  'LIMIT' => 25,
+  'LIMIT' => 2,
 );

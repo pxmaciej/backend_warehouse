@@ -21,13 +21,30 @@ class OrderController extends Controller
      */
     private $orderValidator;
 
+    /**
+     * @var OrderListInterface
+     */
+    private $orderListRepository;
 
-    public function __construct(OrderInterface $orderRepository, OrderValidator $orderValidator)
+    /**
+     * @var ProductInterface
+     */
+    private $productRepository;
+
+    public function __construct
+    (
+        OrderInterface $orderRepository,
+        OrderValidator $orderValidator,
+        OrderListInterface $orderListRepository,
+        ProductInterface $productRepository,
+    )
     {
         $this->middleware('auth:api');
 
         $this->orderRepository = $orderRepository;
         $this->orderValidator = $orderValidator;
+        $this->orderListRepository = $orderListRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -116,10 +133,18 @@ class OrderController extends Controller
     public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
         try {
-
             $validatorId = $this->orderValidator->validateId($id);
 
             if ($validatorId) {
+                if ($request->type == "dostawa" && $request->status == 1) {
+                    $productsList = $this->orderListRepository->showProductByIdRelationToOrder($id);
+                    foreach($productsList as $productList) {
+                        $productId = $productList->product_id;
+                        $product = $this->productRepository->show($productId);
+                        $product->amount = $productList->amount + $product->amount;
+                        $this->productRepository->update($product->id, $product);
+                    }
+                }
                 $order = $this->orderRepository->update($id, $request);
             }
 
