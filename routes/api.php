@@ -76,19 +76,6 @@ Route::group([
 Route::group([
 
     'middleware' => 'api',
-    'prefix' => 'statistic'
-
-], function ($router) {
-    Route::get('index', [App\Http\Controllers\StatisticController::class, 'index'])->middleware('roles:admin');
-    Route::post('store', [App\Http\Controllers\StatisticController::class, 'store'])->middleware('roles:admin');
-    Route::get('show/{id}', [App\Http\Controllers\StatisticController::class, 'show'])->middleware('roles:admin');
-    Route::patch('update/{id}', [App\Http\Controllers\StatisticController::class, 'update'])->middleware('roles:admin');
-    Route::delete('destroy/{id}', [App\Http\Controllers\StatisticController::class, 'destroy'])->middleware('roles:admin');
-});
-
-Route::group([
-
-    'middleware' => 'api',
     'prefix' => 'alert'
 
 ], function ($router) {
